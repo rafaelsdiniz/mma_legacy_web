@@ -4,12 +4,21 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/*
+  Identidade visual do MMA Legacy.
+
+  O jogo tem um tema só, escuro. Em vez de manter duas paletas, :root já recebe
+  os valores escuros e .dark repete os mesmos — assim os componentes do shadcn
+  que usam variantes dark: continuam funcionando sem precisar de ajuste.
+*/
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-sans);
-  --font-mono: var(--font-geist-mono);
-  --font-heading: var(--font-sans);
+  --font-sans: var(--fonte-montserrat), system-ui, sans-serif;
+  --font-display: var(--fonte-rajdhani), system-ui, sans-serif;
+  --font-heading: var(--fonte-rajdhani), system-ui, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, monospace;
+
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -18,11 +27,6 @@
   --color-sidebar-primary: var(--sidebar-primary);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar: var(--sidebar);
-  --color-chart-5: var(--chart-5);
-  --color-chart-4: var(--chart-4);
-  --color-chart-3: var(--chart-3);
-  --color-chart-2: var(--chart-2);
-  --color-chart-1: var(--chart-1);
   --color-ring: var(--ring);
   --color-input: var(--input);
   --color-border: var(--border);
@@ -39,82 +43,95 @@
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
+
+  /* Paleta da marca, usada diretamente como bg-fight, text-legado etc. */
+  --color-grafite: #0b0b0d;
+  --color-grafite-claro: #141418;
+  --color-grafite-borda: #24242c;
+  --color-gelo: #f5f5f5;
+  --color-fight: #c1121f;
+  --color-fight-claro: #e0202f;
+  --color-aco: #4a4f57;
+  --color-aco-claro: #8b919b;
+  --color-legado: #b98a2a;
+  --color-legado-claro: #d9a83f;
+  --color-vitoria: #22c55e;
+
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) * 1.4);
-  --radius-2xl: calc(var(--radius) * 1.8);
-  --radius-3xl: calc(var(--radius) * 2.2);
-  --radius-4xl: calc(var(--radius) * 2.6);
+
+  --animate-entrada: entrada 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+  --animate-descarte: descarte 0.45s cubic-bezier(0.36, 0, 0.66, -0.56) both;
+  --animate-pulso-fight: pulso-fight 2.4s ease-in-out infinite;
 }
 
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --background: #0b0b0d;
+  --foreground: #f5f5f5;
+  --card: #141418;
+  --card-foreground: #f5f5f5;
+  --popover: #141418;
+  --popover-foreground: #f5f5f5;
+  --primary: #c1121f;
+  --primary-foreground: #f5f5f5;
+  --secondary: #24242c;
+  --secondary-foreground: #f5f5f5;
+  --muted: #1a1a20;
+  --muted-foreground: #8b919b;
+  --accent: #24242c;
+  --accent-foreground: #f5f5f5;
+  --destructive: #c1121f;
+  --border: #24242c;
+  --input: #24242c;
+  --ring: #c1121f;
+  --radius: 0.25rem;
+  --sidebar: #0b0b0d;
+  --sidebar-foreground: #f5f5f5;
+  --sidebar-primary: #c1121f;
+  --sidebar-primary-foreground: #f5f5f5;
+  --sidebar-accent: #24242c;
+  --sidebar-accent-foreground: #f5f5f5;
+  --sidebar-border: #24242c;
+  --sidebar-ring: #c1121f;
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  --background: #0b0b0d;
+  --foreground: #f5f5f5;
+  --card: #141418;
+  --card-foreground: #f5f5f5;
+  --popover: #141418;
+  --popover-foreground: #f5f5f5;
+  --primary: #c1121f;
+  --primary-foreground: #f5f5f5;
+  --secondary: #24242c;
+  --secondary-foreground: #f5f5f5;
+  --muted: #1a1a20;
+  --muted-foreground: #8b919b;
+  --accent: #24242c;
+  --accent-foreground: #f5f5f5;
+  --destructive: #c1121f;
+  --border: #24242c;
+  --input: #24242c;
+  --ring: #c1121f;
+}
+
+@keyframes entrada {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* Toca nas sete habilidades que o jogador deixou para trás ao escolher uma. */
+@keyframes descarte {
+  from { opacity: 1; transform: none; filter: none; }
+  to { opacity: 0.16; transform: scale(0.96); filter: grayscale(1); }
+}
+
+@keyframes pulso-fight {
+  0%, 100% { box-shadow: 0 0 0 0 rgb(193 18 31 / 0.45); }
+  50% { box-shadow: 0 0 0 10px rgb(193 18 31 / 0); }
 }
 
 @layer base {
@@ -122,9 +139,55 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground antialiased;
   }
   html {
     @apply font-sans;
+  }
+  /* Títulos sempre na display condensada da marca. */
+  h1, h2, h3, h4 {
+    @apply font-display uppercase tracking-wide;
+  }
+}
+
+@layer utilities {
+  /*
+    Textura sutil de arena: malha diagonal quase imperceptível que impede o
+    fundo de virar um preto chapado sem competir com o conteúdo.
+  */
+  .textura-arena {
+    background-image: repeating-linear-gradient(
+      45deg,
+      rgb(255 255 255 / 0.015) 0px,
+      rgb(255 255 255 / 0.015) 1px,
+      transparent 1px,
+      transparent 7px
+    );
+  }
+
+  /*
+    Recorte angular do padrão visual. O canto cortado é o que dá ao card a cara
+    de placa de metal em vez de retângulo de formulário.
+  */
+  .recorte-angular {
+    clip-path: polygon(
+      16px 0, 100% 0, 100% calc(100% - 16px),
+      calc(100% - 16px) 100%, 0 100%, 0 16px
+    );
+  }
+
+  .recorte-angular-suave {
+    clip-path: polygon(
+      9px 0, 100% 0, 100% calc(100% - 9px),
+      calc(100% - 9px) 100%, 0 100%, 0 9px
+    );
+  }
+
+  /* O octógono do logo, reaproveitado em avatares, selos e chips. */
+  .recorte-octogonal {
+    clip-path: polygon(
+      30% 0%, 70% 0%, 100% 30%, 100% 70%,
+      70% 100%, 30% 100%, 0% 70%, 0% 30%
+    );
   }
 }
