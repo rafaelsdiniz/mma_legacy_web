@@ -1,6 +1,7 @@
 import { getImageProps } from "next/image";
 
 import { BotaoLink } from "@/components/jogo/botao";
+import { Cabeca3dAdiada } from "@/components/jogo/cabeca-3d-adiada";
 import { Marca } from "@/components/jogo/marca";
 
 const ETAPAS = [
@@ -50,6 +51,18 @@ export default function PaginaInicial() {
         </picture>
 
         <div aria-hidden className="home-hero-sombra absolute inset-0 -z-20" />
+
+        {/* Fica acima da sombra, para não ser escurecido junto com a foto, e
+            abaixo do ruído, que passa por cima dele e o costura ao resto da
+            arte. Só no desktop: no celular o conteúdo ocupa a tela toda e não
+            sobraria espaço para a cabeça aparecer inteira. */}
+        <div
+          aria-hidden
+          className="absolute inset-y-0 right-0 -z-[15] hidden w-1/2 md:block lg:w-[55%]"
+        >
+          <Cabeca3dAdiada />
+        </div>
+
         <div aria-hidden className="home-hero-ruido absolute inset-0 -z-10 opacity-30" />
 
         <div className="mx-auto flex w-full max-w-6xl flex-col justify-end px-6 pb-12 pt-16 md:justify-center md:px-8 md:py-20">
