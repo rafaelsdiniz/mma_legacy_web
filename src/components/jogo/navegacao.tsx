@@ -2,99 +2,247 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { MarcaTexto } from "@/components/jogo/marca";
 import { cn } from "@/lib/utils";
 
-const LINKS = [
-  { href: "/", rotulo: "Início" },
-  { href: "/lutadores", rotulo: "Lutadores" },
-  { href: "/criar", rotulo: "Jogar" },
-] as const;
-
 /**
- * Barra de navegação.
+ * Navegação inspirada na estrutura institucional do whitehouse.gov: barra
+ * utilitária fina no topo, barra principal com a marca à esquerda, menu com
+ * painel expansível e rodapé em colunas com faixa final.
  *
- * Fica oculta durante o draft: aquela tela é uma sequência de oito decisões, e
- * um link para outra página no topo só serve para o jogador abandonar a partida
- * pela metade sem querer.
+ * O que foi adaptado é a **estrutura**, não a identidade — cores, tipografia e
+ * bordas angulares continuam sendo as do MMA Legacy.
+ *
+ * Uma decisão deliberada: o painel expansível lista só rotas que existem. Um
+ * mega menu com seções vazias parece grande, mas leva o visitante para 404 e
+ * denuncia que o site é menor do que aparenta.
  */
+
+interface ItemDeMenu {
+  href: string;
+  rotulo: string;
+  descricao?: string;
+}
+
+interface SecaoDeMenu {
+  rotulo: string;
+  href: string;
+  /** Quando presente, o item abre um painel em vez de navegar direto. */
+  itens?: ItemDeMenu[];
+}
+
+const SECOES: SecaoDeMenu[] = [
+  { rotulo: "Início", href: "/" },
+  {
+    rotulo: "Acervo",
+    href: "/lutadores",
+    itens: [
+      {
+        href: "/lutadores",
+        rotulo: "Todos os atletas",
+        descricao: "Notas, estilo e overall de cada um do acervo",
+      },
+      {
+        href: "/creditos",
+        rotulo: "Créditos das imagens",
+        descricao: "Autoria e licença de cada foto usada no jogo",
+      },
+    ],
+  },
+  { rotulo: "Jogar", href: "/criar" },
+];
+
 export function Navbar() {
   const caminho = usePathname();
-  const [aberto, setAberto] = useState(false);
+  const [secaoAberta, setSecaoAberta] = useState<string | null>(null);
+  const [menuMobile, setMenuMobile] = useState(false);
 
+  // Fecha tudo ao trocar de rota: sem isso o painel fica aberto por cima da
+  // página nova depois de um clique.
+  useEffect(() => {
+    setSecaoAberta(null);
+    setMenuMobile(false);
+  }, [caminho]);
+
+  // Durante o draft a navegação some. Aquela tela é uma sequência de oito
+  // decisões irreversíveis, e um link no topo só serve para o jogador
+  // abandonar a partida pela metade sem querer.
   if (caminho.includes("/draft")) {
     return null;
   }
 
   return (
-    <header className="border-grafite-borda bg-grafite/90 sticky top-0 z-40 border-b backdrop-blur">
-      <nav className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
-        <Link href="/" onClick={() => setAberto(false)}>
+    <header className="border-grafite-borda bg-grafite/95 sticky top-0 z-40 border-b backdrop-blur">
+      <BarraUtilitaria />
+
+      <div className="mx-auto flex max-w-6xl items-center gap-6 px-4 py-3 sm:px-6">
+        <Link href="/" className="shrink-0">
           <MarcaTexto className="text-xl" />
         </Link>
 
-        <ul className="hidden items-center gap-1 sm:flex">
-          {LINKS.map((link) => (
-            <li key={link.href}>
-              <ItemDeMenu link={link} caminho={caminho} />
-            </li>
+        <nav className="hidden flex-1 items-center gap-1 md:flex">
+          {SECOES.map((secao) => (
+            <ItemDaBarra
+              key={secao.rotulo}
+              secao={secao}
+              caminho={caminho}
+              aberta={secaoAberta === secao.rotulo}
+              aoAlternar={() =>
+                setSecaoAberta((atual) => (atual === secao.rotulo ? null : secao.rotulo))
+              }
+            />
           ))}
-        </ul>
+        </nav>
+
+        <Link
+          href="/criar"
+          className="recorte-angular-suave bg-fight hover:bg-fight-claro font-display ml-auto hidden shrink-0 px-5 py-2 text-sm font-bold tracking-widest uppercase transition-colors md:block"
+        >
+          Montar lutador
+        </Link>
 
         <button
           type="button"
-          onClick={() => setAberto((atual) => !atual)}
-          aria-expanded={aberto}
+          onClick={() => setMenuMobile((atual) => !atual)}
+          aria-expanded={menuMobile}
           aria-label="Abrir menu"
-          className="border-grafite-borda hover:border-fight flex size-9 items-center justify-center border sm:hidden"
+          className="border-grafite-borda hover:border-fight ml-auto flex size-9 items-center justify-center border md:hidden"
         >
           <span aria-hidden className="font-display text-lg leading-none">
-            {aberto ? "✕" : "≡"}
+            {menuMobile ? "✕" : "≡"}
           </span>
         </button>
-      </nav>
+      </div>
 
-      {aberto && (
-        <ul className="border-grafite-borda flex flex-col border-t px-4 pb-3 sm:hidden">
-          {LINKS.map((link) => (
-            <li key={link.href} onClick={() => setAberto(false)}>
-              <ItemDeMenu link={link} caminho={caminho} className="block py-2" />
-            </li>
-          ))}
-        </ul>
+      {/* Painel do menu, no lugar do mega menu da referência. */}
+      {secaoAberta && (
+        <PainelDaSecao
+          secao={SECOES.find((secao) => secao.rotulo === secaoAberta)!}
+          caminho={caminho}
+        />
       )}
+
+      {menuMobile && <MenuMobile caminho={caminho} />}
     </header>
   );
 }
 
-function ItemDeMenu({
-  link,
-  caminho,
-  className,
-}: {
-  link: { href: string; rotulo: string };
-  caminho: string;
-  className?: string;
-}) {
-  const ativo = link.href === "/" ? caminho === "/" : caminho.startsWith(link.href);
-
+/** Faixa fina acima da barra principal, como a utility bar da referência. */
+function BarraUtilitaria() {
   return (
-    <Link
-      href={link.href}
-      className={cn(
-        "font-display px-3 py-2 text-sm tracking-widest uppercase transition-colors",
-        ativo ? "text-fight-claro" : "text-aco-claro hover:text-gelo",
-        className,
-      )}
-    >
-      {link.rotulo}
-    </Link>
+    <div className="border-grafite-borda bg-grafite-claro border-b">
+      <div className="text-aco font-display mx-auto flex max-w-6xl items-center justify-between px-4 py-1.5 text-[10px] tracking-[0.22em] uppercase sm:px-6">
+        <span>Projeto independente · sem vínculo com organizações esportivas</span>
+        <span className="hidden sm:inline">Escolha · Construa · Sobreviva</span>
+      </div>
+    </div>
   );
 }
 
-/** Rodapé com o aviso legal, que o projeto precisa manter visível. */
+function ItemDaBarra({
+  secao,
+  caminho,
+  aberta,
+  aoAlternar,
+}: {
+  secao: SecaoDeMenu;
+  caminho: string;
+  aberta: boolean;
+  aoAlternar: () => void;
+}) {
+  const ativo = estaAtivo(secao.href, caminho);
+  const classe = cn(
+    "font-display px-3 py-2 text-sm tracking-widest uppercase transition-colors",
+    ativo || aberta ? "text-fight-claro" : "text-aco-claro hover:text-gelo",
+  );
+
+  if (!secao.itens) {
+    return (
+      <Link href={secao.href} className={classe}>
+        {secao.rotulo}
+      </Link>
+    );
+  }
+
+  return (
+    <button type="button" onClick={aoAlternar} aria-expanded={aberta} className={classe}>
+      {secao.rotulo}
+      <span aria-hidden className="ml-1.5 text-[9px]">
+        {aberta ? "▲" : "▼"}
+      </span>
+    </button>
+  );
+}
+
+function PainelDaSecao({ secao, caminho }: { secao: SecaoDeMenu; caminho: string }) {
+  return (
+    <div className="border-grafite-borda bg-grafite-claro hidden border-t md:block">
+      <div className="mx-auto grid max-w-6xl gap-4 px-4 py-6 sm:grid-cols-2 sm:px-6 lg:grid-cols-3">
+        {secao.itens?.map((item) => (
+          <Link
+            key={item.href}
+            href={item.href}
+            className={cn(
+              "hover:border-fight border-l-2 py-1 pl-4 transition-colors",
+              estaAtivo(item.href, caminho) ? "border-fight" : "border-grafite-borda",
+            )}
+          >
+            <span className="font-display block text-base tracking-wide uppercase">
+              {item.rotulo}
+            </span>
+            {item.descricao && (
+              <span className="text-aco mt-0.5 block text-xs leading-snug">
+                {item.descricao}
+              </span>
+            )}
+          </Link>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function MenuMobile({ caminho }: { caminho: string }) {
+  return (
+    <div className="border-grafite-borda bg-grafite-claro border-t md:hidden">
+      <ul className="flex flex-col px-4 py-2">
+        {SECOES.flatMap((secao) => secao.itens ?? [secao]).map((item) => (
+          <li key={item.href}>
+            <Link
+              href={item.href}
+              className={cn(
+                "font-display block py-2.5 text-sm tracking-widest uppercase",
+                estaAtivo(item.href, caminho)
+                  ? "text-fight-claro"
+                  : "text-aco-claro hover:text-gelo",
+              )}
+            >
+              {item.rotulo}
+            </Link>
+          </li>
+        ))}
+      </ul>
+
+      <Link
+        href="/criar"
+        className="bg-fight font-display block px-4 py-3 text-center text-sm font-bold tracking-widest uppercase"
+      >
+        Montar lutador
+      </Link>
+    </div>
+  );
+}
+
+/**
+ * Rodapé em colunas com bloco de chamada e faixa final, seguindo a estrutura da
+ * referência.
+ *
+ * No lugar do bloco de newsletter, que este projeto não tem, entra o convite
+ * para jogar — é o que o rodapé de um jogo tem a oferecer a quem chegou até o
+ * fim da página.
+ */
 export function Rodape() {
   const caminho = usePathname();
 
@@ -104,29 +252,126 @@ export function Rodape() {
 
   return (
     <footer className="border-grafite-borda mt-auto border-t">
-      <div className="text-aco mx-auto flex max-w-6xl flex-col gap-3 px-4 py-8 text-xs leading-relaxed sm:px-6">
-        <MarcaTexto className="text-base" />
+      <div className="mx-auto grid max-w-6xl gap-8 px-4 py-12 sm:px-6 md:grid-cols-4">
+        <ColunaDoRodape
+          titulo="O jogo"
+          links={[
+            { href: "/", rotulo: "Início" },
+            { href: "/criar", rotulo: "Montar lutador" },
+            { href: "/lutadores", rotulo: "Acervo de atletas" },
+          ]}
+        />
 
-        <p className="max-w-2xl">
-          Projeto independente, criado para fins educacionais e de entretenimento.
-          Sem associação, parceria ou aprovação do UFC, da TKO Group Holdings ou de
-          qualquer organização esportiva. Nomes e marcas pertencem aos seus
-          respectivos proprietários.
-        </p>
+        <ColunaDoRodape
+          titulo="Como funciona"
+          links={[
+            { href: "/criar", rotulo: "Draft de oito rodadas" },
+            { href: "/criar", rotulo: "Modos fácil e difícil" },
+            { href: "/lutadores", rotulo: "Notas e estilos" },
+          ]}
+        />
 
-        <p className="max-w-2xl">
-          As notas dos atletas são estimativas editoriais usadas exclusivamente
-          dentro da mecânica do jogo e não representam avaliações oficiais. Os
-          adversários da simulação de carreira são fictícios.
-        </p>
+        <ColunaDoRodape
+          titulo="Sobre"
+          links={[
+            { href: "/creditos", rotulo: "Créditos das imagens" },
+            {
+              href: "https://github.com/rafaelsdiniz/mma_legacy_api",
+              rotulo: "Código da API",
+              externo: true,
+            },
+            {
+              href: "https://github.com/rafaelsdiniz/mma_legacy_web",
+              rotulo: "Código do site",
+              externo: true,
+            },
+          ]}
+        />
 
-        <p className="text-aco/70 mt-2">
-          Desenvolvido por Rafael Silva Diniz · {new Date().getFullYear()} ·{" "}
-          <Link href="/creditos" className="hover:text-gelo underline">
-            Créditos das imagens
+        <div>
+          <p className="font-display text-fight-claro text-xs tracking-[0.22em] uppercase">
+            Comece agora
+          </p>
+          <p className="text-aco-claro mt-3 text-sm leading-relaxed">
+            Oito atletas, oito escolhas e uma carreira inteira para descobrir se
+            você montou um campeão.
+          </p>
+          <Link
+            href="/criar"
+            className="recorte-angular-suave bg-fight hover:bg-fight-claro font-display mt-4 inline-block px-5 py-2.5 text-sm font-bold tracking-widest uppercase transition-colors"
+          >
+            Montar lutador
           </Link>
-        </p>
+        </div>
+      </div>
+
+      {/* Faixa final: marca, aviso legal e assinatura. */}
+      <div className="border-grafite-borda border-t">
+        <div className="text-aco mx-auto flex max-w-6xl flex-col gap-4 px-4 py-8 text-xs leading-relaxed sm:px-6">
+          <MarcaTexto className="text-base" />
+
+          <p className="max-w-3xl">
+            Projeto independente, criado para fins educacionais e de
+            entretenimento. Sem associação, parceria ou aprovação do UFC, da TKO
+            Group Holdings ou de qualquer organização esportiva. Nomes e marcas
+            pertencem aos seus respectivos proprietários.
+          </p>
+
+          <p className="max-w-3xl">
+            As notas dos atletas são estimativas editoriais usadas exclusivamente
+            dentro da mecânica do jogo e não representam avaliações oficiais. Os
+            adversários da simulação de carreira são fictícios.
+          </p>
+
+          <p className="text-aco/70">
+            Desenvolvido por Rafael Silva Diniz · {new Date().getFullYear()}
+          </p>
+        </div>
       </div>
     </footer>
   );
+}
+
+function ColunaDoRodape({
+  titulo,
+  links,
+}: {
+  titulo: string;
+  links: { href: string; rotulo: string; externo?: boolean }[];
+}) {
+  return (
+    <div>
+      <p className="font-display text-fight-claro text-xs tracking-[0.22em] uppercase">
+        {titulo}
+      </p>
+
+      <ul className="mt-3 flex flex-col gap-2">
+        {links.map((link) => (
+          <li key={`${titulo}-${link.rotulo}`}>
+            {link.externo ? (
+              <a
+                href={link.href}
+                target="_blank"
+                rel="noreferrer"
+                className="text-aco-claro hover:text-gelo text-sm transition-colors"
+              >
+                {link.rotulo}
+              </a>
+            ) : (
+              <Link
+                href={link.href}
+                className="text-aco-claro hover:text-gelo text-sm transition-colors"
+              >
+                {link.rotulo}
+              </Link>
+            )}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+function estaAtivo(href: string, caminho: string) {
+  return href === "/" ? caminho === "/" : caminho.startsWith(href);
 }
