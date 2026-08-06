@@ -64,8 +64,12 @@ export function Navbar() {
   // Fecha tudo ao trocar de rota: sem isso o painel fica aberto por cima da
   // página nova depois de um clique.
   useEffect(() => {
-    setSecaoAberta(null);
-    setMenuMobile(false);
+    const quadro = requestAnimationFrame(() => {
+      setSecaoAberta(null);
+      setMenuMobile(false);
+    });
+
+    return () => cancelAnimationFrame(quadro);
   }, [caminho]);
 
   // Durante o draft a navegação some. Aquela tela é uma sequência de oito
@@ -253,8 +257,8 @@ export function Rodape() {
   }
 
   return (
-    <footer className="border-grafite-borda mt-auto border-t">
-      <div className="mx-auto grid max-w-6xl gap-8 px-4 py-12 sm:px-6 md:grid-cols-4">
+    <footer className="border-grafite-borda bg-grafite-claro/70 mt-auto border-t">
+      <div className="mx-auto grid max-w-6xl gap-8 px-4 pt-10 pb-5 sm:px-6 md:grid-cols-4">
         <ColunaDoRodape
           titulo="O jogo"
           links={[
@@ -309,24 +313,24 @@ export function Rodape() {
       </div>
 
       {/* Faixa final: marca, aviso legal e assinatura. */}
-      <div className="border-grafite-borda border-t">
-        <div className="text-aco mx-auto flex max-w-6xl flex-col gap-4 px-4 py-8 text-xs leading-relaxed sm:px-6">
+      <div>
+        <div className="text-aco mx-auto grid max-w-6xl gap-3 px-4 pt-3 pb-8 text-xs leading-relaxed sm:px-6 lg:grid-cols-[auto_1fr] lg:items-start lg:gap-x-8">
           <MarcaTexto className="text-base" />
 
-          <p className="max-w-3xl">
+          <p className="max-w-3xl lg:col-start-2 lg:row-start-1">
             Projeto independente, criado para fins educacionais e de
             entretenimento. Sem associação, parceria ou aprovação do UFC, da TKO
             Group Holdings ou de qualquer organização esportiva. Nomes e marcas
             pertencem aos seus respectivos proprietários.
           </p>
 
-          <p className="max-w-3xl">
+          <p className="max-w-3xl lg:col-start-2">
             As notas dos atletas são estimativas editoriais usadas exclusivamente
             dentro da mecânica do jogo e não representam avaliações oficiais. Os
             adversários da simulação de carreira são fictícios.
           </p>
 
-          <p className="text-aco/70">
+          <p className="text-aco/70 lg:col-span-2">
             Desenvolvido por Rafael Silva Diniz · {new Date().getFullYear()}
           </p>
         </div>

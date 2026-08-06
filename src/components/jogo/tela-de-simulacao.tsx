@@ -6,6 +6,7 @@ import { Botao, BotaoLink } from "@/components/jogo/botao";
 import { Etiqueta, Painel, TituloAngular } from "@/components/jogo/painel";
 import { api, ErroDaApi } from "@/lib/api/cliente";
 import type {
+  EtapaDaCarreira,
   EventoDaCarreira,
   OfertaDeLuta,
   RoundDaLuta,
@@ -56,11 +57,27 @@ export function TelaDeSimulacao({ partidaId }: { partidaId: string }) {
   const situacao = carreira.data;
 
   return (
-    <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col px-4 py-7 sm:px-6">
+    <main className="relative mx-auto flex w-full max-w-6xl flex-1 flex-col px-4 py-7 sm:px-6">
       <Cabecalho situacao={situacao} />
+      <RankingDaCarreira
+        key={`${situacao.estado.etapa}-${situacao.carreira.totalDeLutas}`}
+        situacao={situacao}
+      />
 
       {situacao.eventos.length > 0 && <Eventos eventos={situacao.eventos} />}
-      {situacao.ultimaLuta && <UltimaLuta situacao={situacao} />}
+      {situacao.ultimaLuta && (
+        <UltimaLuta key={situacao.ultimaLuta.luta.ordem} situacao={situacao} />
+      )}
+
+      {jogar.isPending && (
+        <div className="bg-grafite/80 fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm">
+          <div className="animate-pulso-fight recorte-octogonal bg-fight flex size-28 items-center justify-center text-center">
+            <span className="font-display text-sm font-bold tracking-widest uppercase">
+              {jogar.variables?.tipo === "aceitar" ? <><span>A luta</span><br /><span>começou</span></> : "Avançando"}
+            </span>
+          </div>
+        </div>
+      )}
 
       {situacao.encerrada ? (
         <Painel destaque className="mt-6">
@@ -93,6 +110,46 @@ export function TelaDeSimulacao({ partidaId }: { partidaId: string }) {
         </p>
       )}
     </main>
+  );
+}
+
+const ESCADA: { etapa: EtapaDaCarreira; rotulo: string; posicao: string }[] = [
+  { etapa: "CircuitoRegional", rotulo: "Regional", posicao: "Base" },
+  { etapa: "OrganizacaoNacional", rotulo: "Nacional", posicao: "Pro" },
+  { etapa: "GrandeOrganizacao", rotulo: "Grande organização", posicao: "Estreia" },
+  { etapa: "Top15", rotulo: "Ranking", posicao: "#15–6" },
+  { etapa: "Top5", rotulo: "Elite", posicao: "#5–2" },
+  { etapa: "DisputaDeCinturao", rotulo: "Desafiante", posicao: "#1" },
+  { etapa: "Campeao", rotulo: "Campeão", posicao: "C" },
+];
+
+/** A posição que a API conhece: uma escada de etapas, não um ranking inventado. */
+function RankingDaCarreira({ situacao }: { situacao: SituacaoDaCarreira }) {
+  const indiceAtual = ESCADA.findIndex((degrau) => degrau.etapa === situacao.estado.etapa);
+  return (
+    <section className="mt-7 overflow-hidden border border-grafite-borda bg-grafite-claro/70 p-4 sm:p-5">
+      <div className="mb-4 flex items-end justify-between gap-4">
+        <div><Etiqueta>Sua posição na carreira</Etiqueta><p className="font-display text-xl font-bold uppercase">{ESCADA[indiceAtual]?.rotulo}</p></div>
+        <span className="font-display text-legado-claro text-3xl font-bold">{ESCADA[indiceAtual]?.posicao}</span>
+      </div>
+      <ol className="relative grid grid-cols-7 gap-1 before:absolute before:top-4 before:right-[7%] before:left-[7%] before:h-px before:bg-grafite-borda">
+        {ESCADA.map((degrau, indice) => {
+          const atual = indice === indiceAtual;
+          const passou = indice < indiceAtual;
+          return (
+            <li key={degrau.etapa} className="relative flex min-w-0 flex-col items-center text-center">
+              <span className={cn("relative z-10 flex size-8 items-center justify-center rounded-full border font-display text-[10px] font-bold transition-all duration-700", atual && "animate-subir-ranking border-legado bg-legado text-grafite shadow-[0_0_24px_rgba(217,168,63,0.65)]", passou && "border-vitoria bg-vitoria/20 text-vitoria", !atual && !passou && "border-grafite-borda bg-grafite-claro text-aco")}>{degrau.posicao}</span>
+              <span className={cn("mt-2 hidden truncate text-[9px] uppercase sm:block", atual ? "text-gelo" : "text-aco")}>{degrau.rotulo}</span>
+            </li>
+          );
+        })}
+      </ol>
+      {situacao.estado.vitoriasParaSubir > 0 && indiceAtual < ESCADA.length - 1 && (
+        <p className="text-aco-claro mt-4 text-center text-xs">
+          <span className="text-gelo font-semibold">{situacao.estado.vitoriasNaEtapa} de {situacao.estado.vitoriasParaSubir}</span> vitórias para o próximo degrau
+        </p>
+      )}
+    </section>
   );
 }
 
@@ -137,8 +194,8 @@ function Ofertas({ ofertas, carregando, aceitar }: { ofertas: OfertaDeLuta[]; ca
     <section>
       <TituloAngular>Ofertas na mesa</TituloAngular>
       <div className="mt-4 grid gap-4 xl:grid-cols-2">
-        {ofertas.map((oferta) => (
-          <Painel key={oferta.indice} destaque={oferta.valendoCinturao}>
+        {ofertas.map((oferta, indice) => (
+          <Painel key={oferta.indice} destaque={oferta.valendoCinturao} className="animate-entrada" style={{ animationDelay: `${indice * 100}ms` }}>
             <div className="flex h-full flex-col p-5">
               <Etiqueta className={oferta.valendoCinturao ? "text-legado-claro" : undefined}>
                 {oferta.valendoCinturao ? "Valendo cinturão" : `${oferta.roundsProgramados} rounds`}
@@ -228,7 +285,7 @@ function Round({ round }: { round: RoundDaLuta }) {
     round.adversarioBuscouQueda && "defendeu quedas",
   ].filter(Boolean);
   return (
-    <li className={cn("border p-3", venceu ? "border-vitoria/50" : round.vencedor === "Empate" ? "border-grafite-borda" : "border-fight/50")}>
+    <li style={{ animationDelay: `${round.numero * 110}ms` }} className={cn("animate-entrada border p-3", venceu ? "border-vitoria/50" : round.vencedor === "Empate" ? "border-grafite-borda" : "border-fight/50")}>
       <div className="flex justify-between"><Etiqueta>Round {round.numero}</Etiqueta><span className={cn("font-display font-bold", venceu ? "text-vitoria" : "text-fight-claro")}>{venceu ? "10–9" : round.vencedor === "Empate" ? "10–10" : "9–10"}</span></div>
       <p className="text-aco mt-2 min-h-8 text-[10px] leading-snug">{detalhes.join(" · ") || "trocação equilibrada"}</p>
       <p className="mt-2 text-[10px]">Dano: <span className="text-fight-claro">{round.danoDoLutador}</span> / {round.danoDoAdversario}</p>

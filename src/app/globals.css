@@ -65,6 +65,7 @@
   --animate-entrada: entrada 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
   --animate-descarte: descarte 0.45s cubic-bezier(0.36, 0, 0.66, -0.56) both;
   --animate-pulso-fight: pulso-fight 2.4s ease-in-out infinite;
+  --animate-subir-ranking: subir-ranking 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 :root {
@@ -123,6 +124,12 @@
   to { opacity: 1; transform: none; }
 }
 
+@keyframes subir-ranking {
+  0% { opacity: 0; transform: translateY(34px) scale(0.65); }
+  55% { transform: translateY(-6px) scale(1.12); }
+  100% { opacity: 1; transform: none; }
+}
+
 /* Tratamento cinematográfico exclusivo da abertura. */
 .home-hero-sombra {
   background:
@@ -151,6 +158,11 @@
 
 @media (prefers-reduced-motion: reduce) {
   .animate-entrada {
+    animation: none;
+  }
+
+  .animate-subir-ranking,
+  .animate-pulso-fight {
     animation: none;
   }
 }
