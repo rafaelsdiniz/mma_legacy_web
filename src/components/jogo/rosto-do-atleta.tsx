@@ -3,20 +3,22 @@
 import Image from "next/image";
 import { useState } from "react";
 
-import { fotoDoAtleta } from "@/lib/fotos";
 import { cn } from "@/lib/utils";
 
 /**
  * O rosto do atleta, recortado no octógono da marca.
  *
- * As fotos vêm do Wikimedia Commons e são imagens livres, não de divulgação —
- * enquadramento, fundo e iluminação variam muito. A máscara octogonal com
- * enquadramento no topo é o que normaliza isso: corta o ambiente, centraliza a
- * cabeça e faz quarenta fotos díspares parecerem um elenco só.
+ * As fotos são colocadas à mão em `public/fighters/`, com o nome igual ao slug
+ * do atleta — o mesmo que a API devolve. Não há catálogo nem script: se o
+ * arquivo existe, aparece; se não, entra a silhueta.
  *
- * Quem não tem imagem livre cai na silhueta, que é o comportamento previsto
- * desde o começo do projeto.
+ * Aceita `.png` e `.jpg` nessa ordem, então não é preciso converter nada nem
+ * padronizar formato antes de soltar o arquivo na pasta.
  */
+
+/** Formatos tentados, em ordem, antes de desistir e mostrar a silhueta. */
+const FORMATOS = ["png", "jpg"] as const;
+
 export function RostoDoAtleta({
   slug,
   nome,
@@ -28,8 +30,8 @@ export function RostoDoAtleta({
   className?: string;
   tamanho?: number;
 }) {
-  const [falhou, setFalhou] = useState(false);
-  const foto = fotoDoAtleta(slug);
+  const [tentativa, setTentativa] = useState(0);
+  const semFoto = tentativa >= FORMATOS.length;
 
   return (
     <span
@@ -39,25 +41,28 @@ export function RostoDoAtleta({
       )}
       style={{ width: tamanho, height: tamanho }}
     >
-      {foto && !falhou ? (
+      {semFoto ? (
+        <Silhueta />
+      ) : (
         <Image
-          src={foto}
+          // A key força o Next a refazer a requisição ao trocar de formato;
+          // sem ela ele reaproveita o elemento e o onError não dispara de novo.
+          key={FORMATOS[tentativa]}
+          src={`/fighters/${slug}.${FORMATOS[tentativa]}`}
           alt={nome}
           width={tamanho}
           height={tamanho}
-          onError={() => setFalhou(true)}
+          onError={() => setTentativa((atual) => atual + 1)}
           // `object-top` porque o rosto quase sempre está no terço superior da
           // foto; centralizar cortaria a cabeça na maioria delas.
           className="h-full w-full object-cover object-top"
         />
-      ) : (
-        <Silhueta />
       )}
     </span>
   );
 }
 
-/** Placeholder para atletas sem imagem de licença compatível. */
+/** Placeholder para atletas que ainda não têm foto na pasta. */
 function Silhueta() {
   return (
     <svg

@@ -50,11 +50,7 @@ const SECOES: SecaoDeMenu[] = [
         rotulo: "Ranking das divisões",
         descricao: "A escada que sua carreira vai subir, das oito categorias",
       },
-      {
-        href: "/creditos",
-        rotulo: "Créditos das imagens",
-        descricao: "Autoria e licença de cada foto usada no jogo",
-      },
+
     ],
   },
   { rotulo: "Jogar", href: "/criar" },
@@ -281,7 +277,7 @@ export function Rodape() {
         <ColunaDoRodape
           titulo="Sobre"
           links={[
-            { href: "/creditos", rotulo: "Créditos das imagens" },
+
             {
               href: "https://github.com/rafaelsdiniz/mma_legacy_api",
               rotulo: "Código da API",
