@@ -10,6 +10,7 @@ import { z } from "zod";
 import { aquecerApi } from "@/lib/api/aquecimento";
 
 import { Botao } from "@/components/jogo/botao";
+import { Cabeca3dAdiada } from "@/components/jogo/cabeca-3d-adiada";
 import { Etiqueta, Painel } from "@/components/jogo/painel";
 import { api, ErroDaApi } from "@/lib/api/cliente";
 import type { BaseDeLuta, CategoriaDePeso } from "@/lib/api/tipos";
@@ -217,23 +218,25 @@ export function FormularioDeLutador() {
   );
 }
 
-/** Silhueta do lutador antes de o draft revelar seus atributos. */
+/**
+ * O painel ao lado da ficha, com a cabeça em 3D no lugar da antiga silhueta
+ * chapada.
+ *
+ * O boneco preto cumpria a função de ocupar o espaço, e só. A cabeça girando
+ * devagar faz o mesmo trabalho de dizer "aqui vai existir um lutador" com um
+ * peso completamente diferente — é a primeira coisa viva que a pessoa vê no
+ * jogo, e vê justamente enquanto decide quem vai ser.
+ */
 function LutadorNaoRevelado() {
   return (
-    <div className="relative hidden h-full min-h-56 overflow-hidden border-r border-grafite-borda bg-[radial-gradient(circle_at_50%_30%,rgba(193,18,31,0.15),transparent_58%)] sm:block">
-      <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-grafite-claro to-transparent" />
-      <svg
-        viewBox="0 0 180 230"
-        className="absolute inset-x-0 bottom-0 mx-auto h-[94%] w-auto text-black drop-shadow-[0_0_22px_rgba(193,18,31,0.2)]"
-        fill="currentColor"
-        aria-label="Lutador ainda não revelado"
-        role="img"
-      >
-        <circle cx="90" cy="42" r="28" />
-        <path d="M61 76c8-7 18-10 29-10s21 3 29 10l15 40-17 8-6-25v35l18 87H51l18-87V99l-6 25-17-8 15-40Z" />
-        <path d="m51 221 18-87h42l18 87h-26l-13-62-13 62H51Z" />
-        <path d="M43 112c5-4 12-3 16 2l7 9-14 13-10-10c-4-4-4-10 1-14Zm94 0c-5-4-12-3-16 2l-7 9 14 13 10-10c4-4 4-10-1-14Z" />
-      </svg>
+    <div className="border-grafite-borda relative hidden h-full min-h-56 overflow-hidden border-r bg-[radial-gradient(circle_at_50%_30%,rgba(193,18,31,0.15),transparent_58%)] sm:block">
+      <div className="absolute inset-0">
+        <Cabeca3dAdiada />
+      </div>
+
+      {/* Escurece o pé do painel para a legenda ler sobre o modelo. */}
+      <div className="from-grafite-claro absolute inset-x-0 bottom-0 h-16 bg-linear-to-t to-transparent" />
+
       <span className="font-display text-aco absolute bottom-3 left-0 w-full text-center text-[10px] tracking-[0.3em] uppercase">
         Não revelado
       </span>
