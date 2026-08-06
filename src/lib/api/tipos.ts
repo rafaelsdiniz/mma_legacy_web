@@ -69,7 +69,41 @@ export type NivelDeDificuldade = "Facil" | "Dificil";
 export type StatusDaPartida =
   | "DraftEmAndamento"
   | "DraftConcluido"
+  | "CarreiraEmAndamento"
   | "CarreiraSimulada";
+
+export type EtapaDaCarreira =
+  | "CircuitoRegional"
+  | "OrganizacaoNacional"
+  | "GrandeOrganizacao"
+  | "Top15"
+  | "Top5"
+  | "DisputaDeCinturao"
+  | "Campeao";
+
+export type MotivoDoEncerramento =
+  | "IdadeLimite"
+  | "CorpoCastigado"
+  | "SequenciaDeDerrotas"
+  | "SemResultados"
+  | "SemContrato"
+  | "LimiteDeLutas"
+  | "EscolhaDoLutador";
+
+export type EventoDaCarreira =
+  | "Promovido"
+  | "Rebaixado"
+  | "Dispensado"
+  | "DisputaDeCinturaoMarcada"
+  | "CinturaoConquistado"
+  | "CinturaoDefendido"
+  | "CinturaoPerdido"
+  | "MudouDeCategoria"
+  | "AnoVirado"
+  | "FicouInativo"
+  | "CarreiraEncerrada";
+
+export type VencedorDoRound = "Lutador" | "Adversario" | "Empate";
 
 export type NivelDeLegado =
   | "PromessaQueNaoCorrespondeu"
@@ -225,6 +259,77 @@ export interface Carreira {
   pontuacaoDeLegado: number;
   conquistas: Conquista[];
   lutas: Luta[];
+}
+
+export interface EstadoDaCarreira {
+  idade: number;
+  categoria: CategoriaDePeso;
+  categoriaTexto: string;
+  etapa: EtapaDaCarreira;
+  organizacao: NivelDaOrganizacao;
+  estilo: EstiloDeLuta;
+  overallAtual: number;
+  overallMaximo: number;
+  atributos: NotaDeHabilidade[];
+  ehCampeao: boolean;
+  sequenciaDeVitorias: number;
+  derrotasSeguidas: number;
+  derrotasParaSerDispensado: number;
+  recusasSeguidas: number;
+  recusasParaSerDispensado: number;
+  vitoriasNaEtapa: number;
+  vitoriasParaSubir: number;
+  compromissosNaTemporada: number;
+  compromissosPorTemporada: number;
+  vezesDispensado: number;
+}
+
+export interface OfertaDeLuta {
+  indice: number;
+  adversario: string;
+  cartelDoAdversario: string;
+  overallDoAdversario: number;
+  estiloDoAdversario: EstiloDeLuta;
+  atributosDoAdversario: NotaDeHabilidade[];
+  organizacao: NivelDaOrganizacao;
+  categoria: CategoriaDePeso;
+  categoriaTexto: string;
+  valendoCinturao: boolean;
+  disputaDeCinturao: boolean;
+  defesaDeCinturao: boolean;
+  roundsProgramados: number;
+  chamada: string;
+}
+
+export interface RoundDaLuta {
+  numero: number;
+  vencedor: VencedorDoRound;
+  lutadorBuscouQueda: boolean;
+  lutadorControlou: boolean;
+  adversarioBuscouQueda: boolean;
+  adversarioControlou: boolean;
+  fadigaDoLutador: number;
+  fadigaDoAdversario: number;
+  danoDoLutador: number;
+  danoDoAdversario: number;
+  encerramento: MetodoDeEncerramento | null;
+}
+
+export interface DesfechoDaUltimaLuta {
+  luta: Luta;
+  rounds: RoundDaLuta[];
+}
+
+export interface SituacaoDaCarreira {
+  partidaId: string;
+  nomeDeCartaz: string;
+  encerrada: boolean;
+  motivoDoEncerramento: MotivoDoEncerramento | null;
+  estado: EstadoDaCarreira;
+  ofertas: OfertaDeLuta[];
+  carreira: Carreira;
+  ultimaLuta: DesfechoDaUltimaLuta | null;
+  eventos: EventoDaCarreira[];
 }
 
 export interface Resultado {
