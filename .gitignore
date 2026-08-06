@@ -42,3 +42,10 @@ next-env.d.ts
 
 # ambiente local
 .env.local
+
+# Modelos 3D crus, antes da compressão. O .glb original do Alex Pereira tem
+# 27 MB — peso de vídeo dentro de um repositório de código, e que o site nunca
+# serve. O que vai para produção é a versão comprimida com Draco, em
+# public/alex-pereira.glb, com 2,7 MB. Para regerar:
+#   npx @gltf-transform/cli draco "<original>.glb" public/alex-pereira.glb
+/public/alex-pereira-head/
