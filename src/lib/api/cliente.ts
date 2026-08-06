@@ -2,6 +2,7 @@ import type {
   Carreira,
   CriarPartidaRequisicao,
   Habilidade,
+  LutadorDoAcervo,
   Partida,
   Resultado,
   RodadaAtual,
@@ -93,6 +94,8 @@ function primeiroErroDeCampo(erros?: Record<string, string[]>) {
 export const api = {
   /** Ping leve, usado para acordar a API antes de o jogador precisar dela. */
   saude: () => requisitar<{ situacao: string }>("/saude"),
+
+  listarLutadores: () => requisitar<LutadorDoAcervo[]>("/lutadores"),
 
   criarPartida: (dados: CriarPartidaRequisicao) =>
     requisitar<Partida>("/partidas", {

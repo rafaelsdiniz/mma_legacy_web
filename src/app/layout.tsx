@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Rajdhani, Montserrat } from "next/font/google";
 
+import { Navbar, Rodape } from "@/components/jogo/navegacao";
 import { Provedores } from "@/components/provedores";
 
 import "./globals.css";
@@ -38,7 +39,11 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${rajdhani.variable} ${montserrat.variable} dark h-full antialiased`}
     >
       <body className="textura-arena flex min-h-full flex-col">
-        <Provedores>{children}</Provedores>
+        <Provedores>
+          <Navbar />
+          {children}
+          <Rodape />
+        </Provedores>
       </body>
     </html>
   );

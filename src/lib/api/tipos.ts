@@ -89,6 +89,19 @@ export interface NotaDeHabilidade {
   nota: number;
 }
 
+/** Um atleta do acervo, como aparece na página que lista todos. */
+export interface LutadorDoAcervo {
+  id: string;
+  nome: string;
+  slug: string;
+  pais: string;
+  overall: number;
+  estilo: EstiloDeLuta;
+  maiorQualidade: string;
+  principalFraqueza: string;
+  notas: NotaDeHabilidade[];
+}
+
 export interface Ficha {
   nome: string;
   apelido: string;
