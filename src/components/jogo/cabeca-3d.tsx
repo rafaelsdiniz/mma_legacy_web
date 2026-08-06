@@ -13,8 +13,32 @@ const DECODIFICADOR = "/draco/";
 /** Altura que a cabeça deve ocupar na cena, em unidades do mundo 3D. */
 const ALTURA_ALVO = 1.6;
 
-/** Voltas por minuto. Devagar o suficiente para não competir com o texto. */
-const VOLTAS_POR_MINUTO = 1.5;
+/**
+ * Quanto girar para o rosto ficar de frente para a câmera, em radianos.
+ *
+ * O modelo veio pronto e nada garante que ele nasça olhando para a frente.
+ * Se estiver mostrando a nuca, troque para `Math.PI`; se estiver de perfil,
+ * `Math.PI / 2` ou `-Math.PI / 2`.
+ */
+const ROTACAO_FRONTAL = 0;
+
+/**
+ * A amplitude e o ritmo do balanço.
+ *
+ * A cabeça não gira: ela oscila alguns graus em torno da frente, como quem está
+ * parado mas vivo. Os períodos são propositalmente diferentes entre si e sem
+ * divisor comum — se os dois batessem, o movimento fecharia um ciclo visível e
+ * viraria animação de vitrine em vez de respiração.
+ */
+const BALANCO = {
+  /** ~7° para os lados. */
+  amplitudeHorizontal: 0.12,
+  periodoHorizontal: 9,
+
+  /** ~3° de inclinação, o aceno mínimo que tira a cabeça da rigidez. */
+  amplitudeVertical: 0.05,
+  periodoVertical: 6.5,
+} as const;
 
 /**
  * A cabeça em 3D que gira no fundo da home.
@@ -73,12 +97,20 @@ function Modelo() {
     return { escala: fator, deslocamento: centro.multiplyScalar(-fator) };
   }, [scene]);
 
-  useFrame((_, delta) => {
+  useFrame((estado) => {
     if (!grupo.current) return;
 
-    // Girar por tempo decorrido, e não por quadro, mantém a mesma velocidade em
-    // tela de 60 Hz e de 144 Hz.
-    grupo.current.rotation.y += delta * ((VOLTAS_POR_MINUTO * Math.PI * 2) / 60);
+    // A rotação é atribuída a partir do tempo decorrido, e não somada quadro a
+    // quadro. Somar acumularia erro e faria a cabeça derivar da frente ao longo
+    // dos minutos; assim ela sempre volta exatamente ao ponto de partida.
+    const tempo = estado.clock.elapsedTime;
+
+    grupo.current.rotation.y =
+      ROTACAO_FRONTAL +
+      Math.sin((tempo / BALANCO.periodoHorizontal) * Math.PI * 2) * BALANCO.amplitudeHorizontal;
+
+    grupo.current.rotation.x =
+      Math.sin((tempo / BALANCO.periodoVertical) * Math.PI * 2) * BALANCO.amplitudeVertical;
   });
 
   return (
