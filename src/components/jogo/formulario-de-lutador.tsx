@@ -3,8 +3,11 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+
+import { aquecerApi } from "@/lib/api/aquecimento";
 
 import { Botao } from "@/components/jogo/botao";
 import { Etiqueta, Painel } from "@/components/jogo/painel";
@@ -43,6 +46,10 @@ type Formulario = z.input<typeof esquema>;
 
 export function FormularioDeLutador() {
   const router = useRouter();
+
+  // Acorda a API enquanto o jogador preenche a ficha, para o cold start do
+  // tier gratuito acontecer nesses segundos e não depois do clique.
+  useEffect(aquecerApi, []);
 
   const {
     register,

@@ -91,6 +91,9 @@ function primeiroErroDeCampo(erros?: Record<string, string[]>) {
 }
 
 export const api = {
+  /** Ping leve, usado para acordar a API antes de o jogador precisar dela. */
+  saude: () => requisitar<{ situacao: string }>("/saude"),
+
   criarPartida: (dados: CriarPartidaRequisicao) =>
     requisitar<Partida>("/partidas", {
       method: "POST",
