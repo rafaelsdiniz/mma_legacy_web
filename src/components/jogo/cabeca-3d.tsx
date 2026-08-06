@@ -10,8 +10,14 @@ const MODELO = "/alex-pereira.glb";
 /** Decodificador Draco servido pelo próprio site, e não por CDN de terceiros. */
 const DECODIFICADOR = "/draco/";
 
-/** Altura que a cabeça deve ocupar na cena, em unidades do mundo 3D. */
-const ALTURA_ALVO = 1.6;
+/**
+ * Altura do modelo inteiro na cena, em unidades do mundo 3D.
+ *
+ * Com a câmera onde está, a altura visível é de cerca de 1,8 unidade. Deixar o
+ * modelo em 1,2 dá folga em cima e embaixo — sem ela o topo da cabeça e os
+ * ombros saem cortados pela borda, ainda mais quando o balanço inclina a peça.
+ */
+const ALTURA_ALVO = 1.2;
 
 /**
  * Quanto girar para o rosto ficar de frente para a câmera, em radianos.
@@ -20,7 +26,7 @@ const ALTURA_ALVO = 1.6;
  * Se estiver mostrando a nuca, troque para `Math.PI`; se estiver de perfil,
  * `Math.PI / 2` ou `-Math.PI / 2`.
  */
-const ROTACAO_FRONTAL = 0;
+const ROTACAO_FRONTAL = -Math.PI / 2;
 
 /**
  * A amplitude e o ritmo do balanço.
