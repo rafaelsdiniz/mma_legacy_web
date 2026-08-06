@@ -1,77 +1,113 @@
+import { getImageProps } from "next/image";
+
 import { BotaoLink } from "@/components/jogo/botao";
 import { Marca } from "@/components/jogo/marca";
-import { Etiqueta, Painel } from "@/components/jogo/painel";
-
-/**
- * Home.
- *
- * O trabalho desta tela é converter visitante em jogador num clique — por isso
- * não existe página de "como jogar". As três etapas abaixo dizem o essencial em
- * poucas palavras, e o resto o jogador aprende na primeira rodada do draft.
- */
 
 const ETAPAS = [
-  {
-    numero: "01",
-    titulo: "Oito atletas",
-    texto: "O sorteio apresenta um por vez. Você não sabe quem vem depois.",
-  },
-  {
-    numero: "02",
-    titulo: "Uma habilidade de cada",
-    texto:
-      "Pegou a potência do Poatan? O slot fechou. O wrestling vai ter que vir de outro.",
-  },
-  {
-    numero: "03",
-    titulo: "Uma carreira inteira",
-    texto: "Cartel, cinturões, mudança de categoria e o veredito do seu legado.",
-  },
+  { numero: "01", titulo: "Oito atletas", texto: "O sorteio não revela quem vem depois." },
+  { numero: "02", titulo: "Uma habilidade", texto: "Cada escolha fecha uma porta para sempre." },
+  { numero: "03", titulo: "Um legado", texto: "A carreira decide se o seu nome será lembrado." },
 ];
 
+/**
+ * Abertura do jogo. As duas imagens têm enquadramentos próprios, então o
+ * navegador escolhe a arte correta em vez de apenas cortar a versão desktop.
+ */
 export default function PaginaInicial() {
+  const comum = { alt: "", sizes: "100vw" };
+  const {
+    props: { srcSet: desktop },
+  } = getImageProps({
+    ...comum,
+    src: "/fundoPc-v2.png",
+    width: 1672,
+    height: 941,
+    quality: 75,
+  });
+  const {
+    props: { srcSet: mobile, ...imagem },
+  } = getImageProps({
+    ...comum,
+    src: "/fundoMobile.png",
+    width: 1024,
+    height: 1536,
+    quality: 75,
+  });
+
   return (
-    <main className="relative flex flex-1 flex-col items-center justify-center overflow-hidden px-6 py-16">
-      {/* Halo vermelho ao fundo, no lugar do refletor da arena. */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute top-1/4 left-1/2 h-[520px] w-[520px] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,rgba(193,18,31,0.16),transparent_68%)] blur-2xl"
-      />
+    <main className="bg-grafite flex-1">
+      <section className="home-hero relative isolate flex min-h-[calc(100svh-61px)] overflow-hidden">
+        <picture className="absolute inset-0 -z-30">
+          <source media="(min-width: 768px)" srcSet={desktop} />
+          <source srcSet={mobile} />
+          <img
+            {...imagem}
+            alt=""
+            aria-hidden="true"
+            fetchPriority="high"
+            className="h-full w-full object-cover object-[center_32%] md:object-[center_45%]"
+          />
+        </picture>
 
-      <div className="relative flex w-full max-w-4xl flex-col items-center text-center">
-        <Marca tamanho={300} className="animate-entrada" />
+        <div aria-hidden className="home-hero-sombra absolute inset-0 -z-20" />
+        <div aria-hidden className="home-hero-ruido absolute inset-0 -z-10 opacity-30" />
 
-        <p className="text-aco-claro mt-8 max-w-xl text-base leading-relaxed sm:text-lg">
-          Monte o lutador perfeito com as melhores habilidades das maiores
-          referências do MMA e descubra até onde sua carreira chegaria.
-        </p>
+        <div className="mx-auto flex w-full max-w-6xl flex-col justify-end px-6 pb-12 pt-16 md:justify-center md:px-8 md:py-20">
+          <div className="animate-entrada flex max-w-xl flex-col items-center text-center md:items-start md:text-left">
+            <div className="mb-5 flex items-center gap-3 text-[10px] font-semibold tracking-[0.32em] text-white/60 uppercase md:text-xs">
+              <span className="bg-fight h-px w-9" />
+              Toda escolha deixa uma marca
+            </div>
 
-        <div className="mt-10">
-          <BotaoLink href="/criar" apoio="Faça parte do legado">
-            Montar meu lutador
-          </BotaoLink>
+            <Marca
+              tamanho={390}
+              className="w-[250px] drop-shadow-[0_10px_35px_rgba(0,0,0,0.95)] sm:w-[310px] md:w-[390px]"
+            />
+
+            <h1 className="sr-only">MMA Legacy</h1>
+            <p className="mt-5 max-w-md text-sm leading-6 font-medium text-white/78 sm:text-base sm:leading-7 md:mt-7">
+              Construa um lutador habilidade por habilidade. Enfrente uma carreira
+              inteira e descubra se suas escolhas criaram um campeão — ou só mais
+              um nome esquecido.
+            </p>
+
+            <BotaoLink
+              href="/criar"
+              apoio="O seu legado começa agora"
+              className="mt-8 min-w-64 md:mt-9"
+            >
+              Entrar no octógono
+            </BotaoLink>
+
+            <div className="mt-9 grid w-full max-w-lg grid-cols-3 border-y border-white/12 bg-black/15 backdrop-blur-[2px] md:mt-12">
+              {ETAPAS.map((etapa) => (
+                <div
+                  key={etapa.numero}
+                  className="border-white/12 px-2 py-3 text-left not-last:border-r sm:px-4"
+                >
+                  <span className="font-display text-fight-claro text-lg font-bold">
+                    {etapa.numero}
+                  </span>
+                  <p className="font-display mt-0.5 text-[10px] font-semibold tracking-wide text-white uppercase sm:text-xs">
+                    {etapa.titulo}
+                  </p>
+                  <p className="mt-1 hidden text-[10px] leading-4 text-white/45 sm:block">
+                    {etapa.texto}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
 
-        <div className="mt-20 grid w-full gap-4 sm:grid-cols-3">
-          {ETAPAS.map((etapa) => (
-            <Painel key={etapa.numero} className="text-left">
-              <div className="p-5">
-                <span className="font-display text-fight text-3xl leading-none font-bold">
-                  {etapa.numero}
-                </span>
-                <h3 className="mt-3 text-lg leading-tight">{etapa.titulo}</h3>
-                <p className="text-aco-claro mt-2 text-sm leading-relaxed">
-                  {etapa.texto}
-                </p>
-              </div>
-            </Painel>
-          ))}
+        <div
+          aria-hidden
+          className="absolute right-5 bottom-5 hidden items-center gap-3 font-display text-[10px] tracking-[0.28em] text-white/35 uppercase lg:flex"
+        >
+          Escolha · Construa · Sobreviva
+          <span className="bg-fight h-px w-12" />
         </div>
-
-        <Etiqueta className="mt-16">
-          Projeto independente · sem vínculo com organizações esportivas
-        </Etiqueta>
-      </div>
+      </section>
     </main>
   );
 }

@@ -121,7 +121,10 @@ export function Rodape() {
         </p>
 
         <p className="text-aco/70 mt-2">
-          Desenvolvido por Rafael Silva Diniz · {new Date().getFullYear()}
+          Desenvolvido por Rafael Silva Diniz · {new Date().getFullYear()} ·{" "}
+          <Link href="/creditos" className="hover:text-gelo underline">
+            Créditos das imagens
+          </Link>
         </p>
       </div>
     </footer>

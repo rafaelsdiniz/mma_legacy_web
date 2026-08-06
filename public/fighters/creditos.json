@@ -1,0 +1,217 @@
+[
+  {
+    "slug": "alex-pereira",
+    "nome": "Alex Pereira",
+    "arquivo": "/fighters/alex-pereira.jpg"
+  },
+  {
+    "slug": "alexander-volkanovski",
+    "nome": "Alexander Volkanovski",
+    "arquivo": "/fighters/alexander-volkanovski.jpg"
+  },
+  {
+    "slug": "amanda-nunes",
+    "nome": "Amanda Nunes",
+    "arquivo": "/fighters/amanda-nunes.jpg"
+  },
+  {
+    "slug": "anderson-silva",
+    "nome": "Anderson Silva",
+    "arquivo": "/fighters/anderson-silva.png"
+  },
+  {
+    "slug": "antonio-rodrigo-nogueira",
+    "nome": "Antônio Rodrigo Nogueira",
+    "arquivo": "/fighters/antonio-rodrigo-nogueira.jpg"
+  },
+  {
+    "slug": "antônio-rodrigo-nogueira",
+    "nome": "Antônio Rodrigo Nogueira",
+    "arquivo": "/fighters/antônio-rodrigo-nogueira.jpg"
+  },
+  {
+    "slug": "cain-velasquez",
+    "nome": "Cain Velasquez",
+    "arquivo": "/fighters/cain-velasquez.jpg"
+  },
+  {
+    "slug": "charles-oliveira",
+    "nome": "Charles Oliveira",
+    "arquivo": "/fighters/charles-oliveira.jpg"
+  },
+  {
+    "slug": "conor-mcgregor",
+    "nome": "Conor McGregor",
+    "arquivo": "/fighters/conor-mcgregor.jpeg"
+  },
+  {
+    "slug": "daniel-cormier",
+    "nome": "Daniel Cormier",
+    "arquivo": "/fighters/daniel-cormier.jpg"
+  },
+  {
+    "slug": "deiveson-figueiredo",
+    "nome": "Deiveson Figueiredo",
+    "arquivo": "/fighters/deiveson-figueiredo.jpg"
+  },
+  {
+    "slug": "demetrious-johnson",
+    "nome": "Demetrious Johnson",
+    "arquivo": "/fighters/demetrious-johnson.png"
+  },
+  {
+    "slug": "dustin-poirier",
+    "nome": "Dustin Poirier",
+    "arquivo": "/fighters/dustin-poirier.jpg"
+  },
+  {
+    "slug": "fedor-emelianenko",
+    "nome": "Fedor Emelianenko",
+    "arquivo": "/fighters/fedor-emelianenko.jpg"
+  },
+  {
+    "slug": "francis-ngannou",
+    "nome": "Francis Ngannou",
+    "arquivo": "/fighters/francis-ngannou.png"
+  },
+  {
+    "slug": "georges-st-pierre",
+    "nome": "Georges St-Pierre",
+    "arquivo": "/fighters/georges-st-pierre.jpg"
+  },
+  {
+    "slug": "glover-teixeira",
+    "nome": "Glover Teixeira",
+    "arquivo": "/fighters/glover-teixeira.jpg"
+  },
+  {
+    "slug": "henry-cejudo",
+    "nome": "Henry Cejudo",
+    "arquivo": "/fighters/henry-cejudo.jpg"
+  },
+  {
+    "slug": "ilia-topuria",
+    "nome": "Ilia Topuria",
+    "arquivo": "/fighters/ilia-topuria.jpg"
+  },
+  {
+    "slug": "islam-makhachev",
+    "nome": "Islam Makhachev",
+    "arquivo": "/fighters/islam-makhachev.jpg"
+  },
+  {
+    "slug": "israel-adesanya",
+    "nome": "Israel Adesanya",
+    "arquivo": "/fighters/israel-adesanya.jpg"
+  },
+  {
+    "slug": "jiri-prochazka",
+    "nome": "Jiri Prochazka",
+    "arquivo": "/fighters/jiri-prochazka.png",
+    "autor": "Show Jana Krause",
+    "licenca": "CC BY 3.0",
+    "licencaUrl": "https://creativecommons.org/licenses/by/3.0",
+    "origem": "https://commons.wikimedia.org/wiki/File%3AJiriProchazka2022.png"
+  },
+  {
+    "slug": "jon-jones",
+    "nome": "Jon Jones",
+    "arquivo": "/fighters/jon-jones.jpg"
+  },
+  {
+    "slug": "jordan-burroughs",
+    "nome": "Jordan Burroughs",
+    "arquivo": "/fighters/jordan-burroughs.jpg"
+  },
+  {
+    "slug": "josé-aldo",
+    "nome": "José Aldo",
+    "arquivo": "/fighters/josé-aldo.jpg"
+  },
+  {
+    "slug": "jose-aldo",
+    "nome": "José Aldo",
+    "arquivo": "/fighters/jose-aldo.jpg"
+  },
+  {
+    "slug": "kamaru-usman",
+    "nome": "Kamaru Usman",
+    "arquivo": "/fighters/kamaru-usman.png",
+    "autor": "MMAnytt",
+    "licenca": "CC BY-SA 3.0",
+    "licencaUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+    "origem": "https://commons.wikimedia.org/wiki/File%3AKamaruUsmanPress2018.png"
+  },
+  {
+    "slug": "khabib-nurmagomedov",
+    "nome": "Khabib Nurmagomedov",
+    "arquivo": "/fighters/khabib-nurmagomedov.jpg"
+  },
+  {
+    "slug": "khamzat-chimaev",
+    "nome": "Khamzat Chimaev",
+    "arquivo": "/fighters/khamzat-chimaev.png"
+  },
+  {
+    "slug": "leon-edwards",
+    "nome": "Leon Edwards",
+    "arquivo": "/fighters/leon-edwards.png"
+  },
+  {
+    "slug": "maurício-rua",
+    "nome": "Maurício Rua",
+    "arquivo": "/fighters/maurício-rua.png",
+    "autor": "[1]",
+    "licenca": "CC BY-SA 2.0",
+    "licencaUrl": "https://creativecommons.org/licenses/by-sa/2.0",
+    "origem": "https://commons.wikimedia.org/wiki/File%3AMauricioRua.png"
+  },
+  {
+    "slug": "mauricio-rua",
+    "nome": "Maurício Rua",
+    "arquivo": "/fighters/mauricio-rua.png",
+    "autor": "[1]",
+    "licenca": "CC BY-SA 2.0",
+    "licencaUrl": "https://creativecommons.org/licenses/by-sa/2.0",
+    "origem": "https://commons.wikimedia.org/wiki/File%3AMauricioRua.png"
+  },
+  {
+    "slug": "max-holloway",
+    "nome": "Max Holloway",
+    "arquivo": "/fighters/max-holloway.jpg"
+  },
+  {
+    "slug": "merab-dvalishvili",
+    "nome": "Merab Dvalishvili",
+    "arquivo": "/fighters/merab-dvalishvili.jpg"
+  },
+  {
+    "slug": "michael-bisping",
+    "nome": "Michael Bisping",
+    "arquivo": "/fighters/michael-bisping.png",
+    "autor": "Michael Bisping",
+    "licenca": "CC BY 4.0",
+    "licencaUrl": "https://creativecommons.org/licenses/by/4.0",
+    "origem": "https://commons.wikimedia.org/wiki/File%3AMichaelBispingProfile.png"
+  },
+  {
+    "slug": "petr-yan",
+    "nome": "Petr Yan",
+    "arquivo": "/fighters/petr-yan.jpg"
+  },
+  {
+    "slug": "randy-couture",
+    "nome": "Randy Couture",
+    "arquivo": "/fighters/randy-couture.jpg"
+  },
+  {
+    "slug": "vitor-belfort",
+    "nome": "Vitor Belfort",
+    "arquivo": "/fighters/vitor-belfort.jpg"
+  },
+  {
+    "slug": "zabit-magomedsharipov",
+    "nome": "Zabit Magomedsharipov",
+    "arquivo": "/fighters/zabit-magomedsharipov.jpg"
+  }
+]

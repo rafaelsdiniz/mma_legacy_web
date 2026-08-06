@@ -5,6 +5,7 @@ import { useMemo, useState } from "react";
 
 import { BarraDeAtributo } from "@/components/jogo/barra-de-atributo";
 import { Etiqueta, Painel } from "@/components/jogo/painel";
+import { RostoDoAtleta } from "@/components/jogo/rosto-do-atleta";
 import { api } from "@/lib/api/cliente";
 import type { Habilidade, LutadorDoAcervo } from "@/lib/api/tipos";
 import { HABILIDADES } from "@/lib/api/tipos";
@@ -144,7 +145,7 @@ function CardDeLutador({
         className="w-full p-4 text-left"
       >
         <div className="flex items-start gap-3">
-          <div className="bg-grafite-borda recorte-octogonal size-14 shrink-0" />
+          <RostoDoAtleta slug={lutador.slug} nome={lutador.nome} tamanho={56} />
 
           <div className="min-w-0 flex-1">
             <h3 className="truncate text-lg leading-tight">{lutador.nome}</h3>

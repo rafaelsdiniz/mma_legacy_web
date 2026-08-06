@@ -6,6 +6,7 @@ import { useState } from "react";
 
 import { MarcaTexto } from "@/components/jogo/marca";
 import { Etiqueta, Painel } from "@/components/jogo/painel";
+import { RostoDoAtleta } from "@/components/jogo/rosto-do-atleta";
 import { api, ErroDaApi } from "@/lib/api/cliente";
 import type { EscolhaFeita, Habilidade, NotaDeHabilidade } from "@/lib/api/tipos";
 import { HABILIDADES } from "@/lib/api/tipos";
@@ -113,7 +114,12 @@ export function TelaDeDraft({ partidaId }: { partidaId: string }) {
                 <h1 className="mt-1 text-3xl leading-none sm:text-4xl">{atleta.nome}</h1>
                 <p className="text-aco-claro mt-1 text-sm">{atleta.pais}</p>
               </div>
-              <div className="bg-grafite-borda recorte-octogonal hidden size-20 shrink-0 sm:block" />
+              <RostoDoAtleta
+                slug={atleta.slug}
+                nome={atleta.nome}
+                tamanho={80}
+                className="hidden sm:block"
+              />
             </div>
 
             <p className="text-aco-claro text-sm">

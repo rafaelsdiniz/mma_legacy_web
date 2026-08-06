@@ -123,6 +123,38 @@
   to { opacity: 1; transform: none; }
 }
 
+/* Tratamento cinematográfico exclusivo da abertura. */
+.home-hero-sombra {
+  background:
+    linear-gradient(180deg, rgb(5 5 7 / 0.24) 0%, rgb(5 5 7 / 0.08) 36%, rgb(5 5 7 / 0.92) 100%),
+    radial-gradient(circle at 50% 50%, transparent 12%, rgb(5 5 7 / 0.42) 100%);
+}
+
+.home-hero-ruido {
+  background-image: repeating-linear-gradient(
+    110deg,
+    rgb(255 255 255 / 0.025) 0,
+    rgb(255 255 255 / 0.025) 1px,
+    transparent 1px,
+    transparent 5px
+  );
+  mix-blend-mode: soft-light;
+}
+
+@media (min-width: 768px) {
+  .home-hero-sombra {
+    background:
+      linear-gradient(90deg, rgb(5 5 7 / 0.42) 0%, rgb(5 5 7 / 0.12) 45%, transparent 68%),
+      linear-gradient(180deg, rgb(5 5 7 / 0.18) 0%, transparent 52%, rgb(5 5 7 / 0.55) 100%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-entrada {
+    animation: none;
+  }
+}
+
 /* Toca nas sete habilidades que o jogador deixou para trás ao escolher uma. */
 @keyframes descarte {
   from { opacity: 1; transform: none; filter: none; }
