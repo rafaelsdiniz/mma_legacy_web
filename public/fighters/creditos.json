@@ -1,5 +1,20 @@
 [
   {
+    "slug": "aaron-pico",
+    "nome": "Aaron Pico",
+    "arquivo": "/fighters/aaron-pico.png"
+  },
+  {
+    "slug": "aiemann-zahabi",
+    "nome": "Aiemann Zahabi",
+    "arquivo": "/fighters/aiemann-zahabi.jpg"
+  },
+  {
+    "slug": "alessandro-costa",
+    "nome": "Alessandro Costa",
+    "arquivo": "/fighters/alessandro-costa.jpg"
+  },
+  {
     "slug": "alex-pereira",
     "nome": "Alex Pereira",
     "arquivo": "/fighters/alex-pereira.jpg"
@@ -8,6 +23,21 @@
     "slug": "alexander-volkanovski",
     "nome": "Alexander Volkanovski",
     "arquivo": "/fighters/alexander-volkanovski.jpg"
+  },
+  {
+    "slug": "alexandre-pantoja",
+    "nome": "Alexandre Pantoja",
+    "arquivo": "/fighters/alexandre-pantoja.jpg"
+  },
+  {
+    "slug": "aljamain-sterling",
+    "nome": "Aljamain Sterling",
+    "arquivo": "/fighters/aljamain-sterling.jpg"
+  },
+  {
+    "slug": "alonzo-menifield",
+    "nome": "Alonzo Menifield",
+    "arquivo": "/fighters/alonzo-menifield.jpg"
   },
   {
     "slug": "amanda-nunes",
@@ -20,14 +50,57 @@
     "arquivo": "/fighters/anderson-silva.png"
   },
   {
+    "slug": "antônio-rodrigo-nogueira",
+    "nome": "Antônio Rodrigo Nogueira",
+    "arquivo": "/fighters/antônio-rodrigo-nogueira.jpg"
+  },
+  {
     "slug": "antonio-rodrigo-nogueira",
     "nome": "Antônio Rodrigo Nogueira",
     "arquivo": "/fighters/antonio-rodrigo-nogueira.jpg"
   },
   {
-    "slug": "antônio-rodrigo-nogueira",
-    "nome": "Antônio Rodrigo Nogueira",
-    "arquivo": "/fighters/antônio-rodrigo-nogueira.jpg"
+    "slug": "arman-tsarukyan",
+    "nome": "Arman Tsarukyan",
+    "arquivo": "/fighters/arman-tsarukyan.jpg"
+  },
+  {
+    "slug": "arnold-allen",
+    "nome": "Arnold Allen",
+    "arquivo": "/fighters/arnold-allen.jpg"
+  },
+  {
+    "slug": "asu-almabayev",
+    "nome": "Asu Almabayev",
+    "arquivo": "/fighters/asu-almabayev.png",
+    "autor": "Qazaq Stand Up",
+    "licenca": "CC BY 4.0",
+    "licencaUrl": "https://creativecommons.org/licenses/by/4.0",
+    "origem": "https://commons.wikimedia.org/wiki/File%3AAsuAlmabayev.png"
+  },
+  {
+    "slug": "belal-muhammad",
+    "nome": "Belal Muhammad",
+    "arquivo": "/fighters/belal-muhammad.jpg"
+  },
+  {
+    "slug": "bo-nickal",
+    "nome": "Bo Nickal",
+    "arquivo": "/fighters/bo-nickal.jpg"
+  },
+  {
+    "slug": "brandon-moreno",
+    "nome": "Brandon Moreno",
+    "arquivo": "/fighters/brandon-moreno.jpg"
+  },
+  {
+    "slug": "brendan-allen",
+    "nome": "Brendan Allen",
+    "arquivo": "/fighters/brendan-allen.png",
+    "autor": "WEIGHING IN",
+    "licenca": "CC BY 4.0",
+    "licencaUrl": "https://creativecommons.org/licenses/by/4.0",
+    "origem": "https://commons.wikimedia.org/wiki/File%3ABrendanAllen.png"
   },
   {
     "slug": "cain-velasquez",
@@ -35,14 +108,53 @@
     "arquivo": "/fighters/cain-velasquez.jpg"
   },
   {
+    "slug": "caio-borralho",
+    "nome": "Caio Borralho",
+    "arquivo": "/fighters/caio-borralho.jpg"
+  },
+  {
+    "slug": "carlos-prates",
+    "nome": "Carlos Prates",
+    "arquivo": "/fighters/carlos-prates.jpg"
+  },
+  {
+    "slug": "carlos-ulberg",
+    "nome": "Carlos Ulberg",
+    "arquivo": "/fighters/carlos-ulberg.jpg"
+  },
+  {
     "slug": "charles-oliveira",
     "nome": "Charles Oliveira",
     "arquivo": "/fighters/charles-oliveira.jpg"
   },
   {
+    "slug": "ciryl-gane",
+    "nome": "Ciryl Gane",
+    "arquivo": "/fighters/ciryl-gane.jpg"
+  },
+  {
     "slug": "conor-mcgregor",
     "nome": "Conor McGregor",
     "arquivo": "/fighters/conor-mcgregor.jpeg"
+  },
+  {
+    "slug": "cory-sandhagen",
+    "nome": "Cory Sandhagen",
+    "arquivo": "/fighters/cory-sandhagen.jpg"
+  },
+  {
+    "slug": "curtis-blaydes",
+    "nome": "Curtis Blaydes",
+    "arquivo": "/fighters/curtis-blaydes.png"
+  },
+  {
+    "slug": "dan-hooker",
+    "nome": "Dan Hooker",
+    "arquivo": "/fighters/dan-hooker.png",
+    "autor": "Fight Bros NZ",
+    "licenca": "CC BY 3.0",
+    "licencaUrl": "https://creativecommons.org/licenses/by/3.0",
+    "origem": "https://commons.wikimedia.org/wiki/File%3ADanHooker2016.png"
   },
   {
     "slug": "daniel-cormier",
@@ -60,6 +172,20 @@
     "arquivo": "/fighters/demetrious-johnson.png"
   },
   {
+    "slug": "dominick-reyes",
+    "nome": "Dominick Reyes",
+    "arquivo": "/fighters/dominick-reyes.jpg"
+  },
+  {
+    "slug": "dricus-du-plessis",
+    "nome": "Dricus Du Plessis",
+    "arquivo": "/fighters/dricus-du-plessis.jpg",
+    "autor": "User:Philippe3017",
+    "licenca": "CC0",
+    "licencaUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+    "origem": "https://commons.wikimedia.org/wiki/File%3AIMG-Dricus-Duplessis(cropped).jpg"
+  },
+  {
     "slug": "dustin-poirier",
     "nome": "Dustin Poirier",
     "arquivo": "/fighters/dustin-poirier.jpg"
@@ -75,6 +201,11 @@
     "arquivo": "/fighters/francis-ngannou.png"
   },
   {
+    "slug": "gabriel-bonfim",
+    "nome": "Gabriel Bonfim",
+    "arquivo": "/fighters/gabriel-bonfim.jpg"
+  },
+  {
     "slug": "georges-st-pierre",
     "nome": "Georges St-Pierre",
     "arquivo": "/fighters/georges-st-pierre.jpg"
@@ -85,9 +216,32 @@
     "arquivo": "/fighters/glover-teixeira.jpg"
   },
   {
+    "slug": "gregory-rodrigues",
+    "nome": "Gregory Rodrigues",
+    "arquivo": "/fighters/gregory-rodrigues.png",
+    "autor": "Show Me The Money",
+    "licenca": "CC BY 3.0",
+    "licencaUrl": "https://creativecommons.org/licenses/by/3.0",
+    "origem": "https://commons.wikimedia.org/wiki/File%3AGregoryRodrigues.png"
+  },
+  {
     "slug": "henry-cejudo",
     "nome": "Henry Cejudo",
     "arquivo": "/fighters/henry-cejudo.jpg"
+  },
+  {
+    "slug": "ian-machado-garry",
+    "nome": "Ian Machado Garry",
+    "arquivo": "/fighters/ian-machado-garry.jpg",
+    "autor": "Oisinvg",
+    "licenca": "CC BY-SA 4.0",
+    "licencaUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "origem": "https://commons.wikimedia.org/wiki/File%3AIanGarry.jpg"
+  },
+  {
+    "slug": "ikram-aliskerov",
+    "nome": "Ikram Aliskerov",
+    "arquivo": "/fighters/ikram-aliskerov.png"
   },
   {
     "slug": "ilia-topuria",
@@ -103,6 +257,11 @@
     "slug": "israel-adesanya",
     "nome": "Israel Adesanya",
     "arquivo": "/fighters/israel-adesanya.jpg"
+  },
+  {
+    "slug": "jean-silva",
+    "nome": "Jean Silva",
+    "arquivo": "/fighters/jean-silva.jpg"
   },
   {
     "slug": "jiri-prochazka",
@@ -124,6 +283,11 @@
     "arquivo": "/fighters/jordan-burroughs.jpg"
   },
   {
+    "slug": "josh-hokit",
+    "nome": "Josh Hokit",
+    "arquivo": "/fighters/josh-hokit.jpg"
+  },
+  {
     "slug": "josé-aldo",
     "nome": "José Aldo",
     "arquivo": "/fighters/josé-aldo.jpg"
@@ -132,6 +296,11 @@
     "slug": "jose-aldo",
     "nome": "José Aldo",
     "arquivo": "/fighters/jose-aldo.jpg"
+  },
+  {
+    "slug": "justin-gaethje",
+    "nome": "Justin Gaethje",
+    "arquivo": "/fighters/justin-gaethje.jpg"
   },
   {
     "slug": "kamaru-usman",
@@ -143,9 +312,19 @@
     "origem": "https://commons.wikimedia.org/wiki/File%3AKamaruUsmanPress2018.png"
   },
   {
+    "slug": "kevin-holland",
+    "nome": "Kevin Holland",
+    "arquivo": "/fighters/kevin-holland.jpg"
+  },
+  {
     "slug": "khabib-nurmagomedov",
     "nome": "Khabib Nurmagomedov",
     "arquivo": "/fighters/khabib-nurmagomedov.jpg"
+  },
+  {
+    "slug": "khalil-rountree-jr",
+    "nome": "Khalil Rountree Jr.",
+    "arquivo": "/fighters/khalil-rountree-jr.jpg"
   },
   {
     "slug": "khamzat-chimaev",
@@ -153,23 +332,52 @@
     "arquivo": "/fighters/khamzat-chimaev.png"
   },
   {
+    "slug": "kyoji-horiguchi",
+    "nome": "Kyoji Horiguchi",
+    "arquivo": "/fighters/kyoji-horiguchi.jpg"
+  },
+  {
     "slug": "leon-edwards",
     "nome": "Leon Edwards",
     "arquivo": "/fighters/leon-edwards.png"
   },
   {
-    "slug": "maurício-rua",
+    "slug": "magomed-ankalaev",
+    "nome": "Magomed Ankalaev",
+    "arquivo": "/fighters/magomed-ankalaev.jpg"
+  },
+  {
+    "slug": "manel-kape",
+    "nome": "Manel Kape",
+    "arquivo": "/fighters/manel-kape.png",
+    "autor": "Bruno Massami",
+    "licenca": "CC BY 3.0",
+    "licencaUrl": "https://creativecommons.org/licenses/by/3.0",
+    "origem": "https://commons.wikimedia.org/wiki/File%3AManelKape2017.png"
+  },
+  {
+    "slug": "mateusz-gamrot",
+    "nome": "Mateusz Gamrot",
+    "arquivo": "/fighters/mateusz-gamrot.jpg"
+  },
+  {
+    "slug": "mauricio-ruffy",
+    "nome": "Mauricio Ruffy",
+    "arquivo": "/fighters/mauricio-ruffy.jpg"
+  },
+  {
+    "slug": "mauricio-rua",
     "nome": "Maurício Rua",
-    "arquivo": "/fighters/maurício-rua.png",
+    "arquivo": "/fighters/mauricio-rua.png",
     "autor": "[1]",
     "licenca": "CC BY-SA 2.0",
     "licencaUrl": "https://creativecommons.org/licenses/by-sa/2.0",
     "origem": "https://commons.wikimedia.org/wiki/File%3AMauricioRua.png"
   },
   {
-    "slug": "mauricio-rua",
+    "slug": "maurício-rua",
     "nome": "Maurício Rua",
-    "arquivo": "/fighters/mauricio-rua.png",
+    "arquivo": "/fighters/maurício-rua.png",
     "autor": "[1]",
     "licenca": "CC BY-SA 2.0",
     "licencaUrl": "https://creativecommons.org/licenses/by-sa/2.0",
@@ -195,14 +403,110 @@
     "origem": "https://commons.wikimedia.org/wiki/File%3AMichaelBispingProfile.png"
   },
   {
+    "slug": "michael-page",
+    "nome": "Michael Page",
+    "arquivo": "/fighters/michael-page.png"
+  },
+  {
+    "slug": "mike-malott",
+    "nome": "Mike Malott",
+    "arquivo": "/fighters/mike-malott.png",
+    "autor": "Btcfight",
+    "licenca": "CC BY-SA 4.0",
+    "licencaUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "origem": "https://commons.wikimedia.org/wiki/File%3AMike-malott-2023-ufc-fighter-canada.png"
+  },
+  {
+    "slug": "montel-jackson",
+    "nome": "Montel Jackson",
+    "arquivo": "/fighters/montel-jackson.jpg"
+  },
+  {
+    "slug": "movsar-evloev",
+    "nome": "Movsar Evloev",
+    "arquivo": "/fighters/movsar-evloev.jpg"
+  },
+  {
+    "slug": "nassourdine-imavov",
+    "nome": "Nassourdine Imavov",
+    "arquivo": "/fighters/nassourdine-imavov.jpg"
+  },
+  {
+    "slug": "nursulton-ruziboev",
+    "nome": "Nursulton Ruziboev",
+    "arquivo": "/fighters/nursulton-ruziboev.png",
+    "autor": "SPORTS UZ",
+    "licenca": "CC BY 3.0",
+    "licencaUrl": "https://creativecommons.org/licenses/by/3.0",
+    "origem": "https://commons.wikimedia.org/wiki/File%3ANursultonRuziboev2024.png"
+  },
+  {
+    "slug": "paddy-pimblett",
+    "nome": "Paddy Pimblett",
+    "arquivo": "/fighters/paddy-pimblett.jpg"
+  },
+  {
+    "slug": "paulo-costa",
+    "nome": "Paulo Costa",
+    "arquivo": "/fighters/paulo-costa.jpg"
+  },
+  {
     "slug": "petr-yan",
     "nome": "Petr Yan",
     "arquivo": "/fighters/petr-yan.jpg"
   },
   {
+    "slug": "rafael-fiziev",
+    "nome": "Rafael Fiziev",
+    "arquivo": "/fighters/rafael-fiziev.png"
+  },
+  {
     "slug": "randy-couture",
     "nome": "Randy Couture",
     "arquivo": "/fighters/randy-couture.jpg"
+  },
+  {
+    "slug": "reinier-de-ridder",
+    "nome": "Reinier de Ridder",
+    "arquivo": "/fighters/reinier-de-ridder.jpg"
+  },
+  {
+    "slug": "renato-moicano",
+    "nome": "Renato Moicano",
+    "arquivo": "/fighters/renato-moicano.jpg"
+  },
+  {
+    "slug": "sean-strickland",
+    "nome": "Sean Strickland",
+    "arquivo": "/fighters/sean-strickland.png"
+  },
+  {
+    "slug": "sergei-pavlovich",
+    "nome": "Sergei Pavlovich",
+    "arquivo": "/fighters/sergei-pavlovich.png",
+    "autor": "Страна FM",
+    "licenca": "CC BY 3.0",
+    "licencaUrl": "https://creativecommons.org/licenses/by/3.0",
+    "origem": "https://commons.wikimedia.org/wiki/File%3ASergeiPavlovich2018.png"
+  },
+  {
+    "slug": "steve-garcia",
+    "nome": "Steve Garcia",
+    "arquivo": "/fighters/steve-garcia.jpg"
+  },
+  {
+    "slug": "tatsuro-taira",
+    "nome": "Tatsuro Taira",
+    "arquivo": "/fighters/tatsuro-taira.png"
+  },
+  {
+    "slug": "umar-nurmagomedov",
+    "nome": "Umar Nurmagomedov",
+    "arquivo": "/fighters/umar-nurmagomedov.png",
+    "autor": "Новости ННТ",
+    "licenca": "CC BY 3.0",
+    "licencaUrl": "https://creativecommons.org/licenses/by/3.0",
+    "origem": "https://commons.wikimedia.org/wiki/File%3AUmarNurmagomedov.png"
   },
   {
     "slug": "vitor-belfort",
