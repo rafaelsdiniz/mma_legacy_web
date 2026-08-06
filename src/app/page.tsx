@@ -66,14 +66,13 @@ export default function PaginaInicial() {
 
             <h1 className="sr-only">MMA Legacy</h1>
             <p className="mt-5 max-w-md text-sm leading-6 font-medium text-white/78 sm:text-base sm:leading-7 md:mt-7">
-              Construa um lutador habilidade por habilidade. Enfrente uma carreira
-              inteira e descubra se suas escolhas criaram um campeão — ou só mais
-              um nome esquecido.
+              Todo mundo entra achando que vai ser campeão. Monte o seu lutador,
+              encare a carreira inteira e descubra se você é diferente.
             </p>
 
             <BotaoLink
               href="/criar"
-              apoio="O seu legado começa agora"
+              apoio="Oito escolhas. Nenhuma volta atrás."
               className="mt-8 min-w-64 md:mt-9"
             >
               Entrar no octógono

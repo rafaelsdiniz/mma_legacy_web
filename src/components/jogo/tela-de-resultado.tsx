@@ -182,7 +182,7 @@ function Cinturao({ legado }: { legado: string }) {
       />
       <Image
         src="/marca/cinturao.png"
-        alt={`Cinturão de campeão — ${legado}`}
+        alt={`Cinturão de campeão: ${legado}`}
         width={640}
         height={420}
         className="relative h-auto w-full max-w-xl"
