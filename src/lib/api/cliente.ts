@@ -117,6 +117,10 @@ export const api = {
       body: JSON.stringify({ atletaId, habilidade }),
     }),
 
+  /** Dispensa o atleta da vez e devolve a rodada já com o substituto. */
+  pularAtleta: (partidaId: string) =>
+    requisitar<RodadaAtual>(`/partidas/${partidaId}/draft/pular`, { method: "POST" }),
+
   estrearCarreira: (partidaId: string) =>
     requisitar<SituacaoDaCarreira>(`/partidas/${partidaId}/carreira/estrear`, {
       method: "POST",

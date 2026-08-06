@@ -74,10 +74,19 @@ export const METODOS_CURTOS: Record<MetodoDeEncerramento, string> = {
   Decisao: "DEC",
 };
 
+/**
+ * O nome da organização em cada degrau.
+ *
+ * O enum da API continua genérico — `GrandeOrganizacao`, não `Ufc` —, e a marca
+ * mora só aqui. É de propósito: trocar de organização, corrigir um nome ou
+ * regionalizar o jogo vira edição de uma linha nesta tabela, sem migration nem
+ * deploy do back-end. E é a mesma trajetória de verdade: Anderson Silva e José
+ * Aldo saíram do Jungle Fight antes de chegar lá em cima.
+ */
 export const ORGANIZACOES: Record<NivelDaOrganizacao, string> = {
-  CircuitoRegional: "Circuito regional",
-  OrganizacaoNacional: "Organização nacional",
-  GrandeOrganizacao: "Grande organização",
+  CircuitoRegional: "Jungle Fight",
+  OrganizacaoNacional: "LFA",
+  GrandeOrganizacao: "UFC",
 };
 
 export const CATEGORIAS: Record<CategoriaDePeso, string> = {
