@@ -216,6 +216,10 @@ export interface RodadaAtual {
   atleta: AtletaDoDraft;
   habilidadesDisponiveis: Habilidade[];
   escolhasFeitas: EscolhaFeita[];
+  /** Quantas vezes ainda dá para dispensar o atleta da vez. */
+  pulosRestantes: number;
+  /** A cota do nível escolhido: 2 no fácil, 1 no difícil. */
+  pulosPermitidos: number;
 }
 
 export interface Conquista {

@@ -54,6 +54,15 @@ export function TelaDeDraft({ partidaId }: { partidaId: string }) {
     onError: () => setDescartando(null),
   });
 
+  // A resposta do pulo já traz a rodada com o substituto, então ela é gravada
+  // direto no cache em vez de invalidar e pedir de novo — uma ida ao servidor a
+  // menos, e a troca do atleta acontece no mesmo quadro.
+  const pular = useMutation({
+    mutationFn: () => api.pularAtleta(partidaId),
+    onSuccess: (novaRodada) =>
+      clienteDeConsulta.setQueryData(["rodada", partidaId], novaRodada),
+  });
+
   if (rodada.isPending) {
     return <Aviso>Carregando o draft...</Aviso>;
   }
@@ -84,6 +93,8 @@ export function TelaDeDraft({ partidaId }: { partidaId: string }) {
     habilidadesDisponiveis,
     escolhasFeitas,
     nivelDeDificuldade,
+    pulosRestantes,
+    pulosPermitidos,
   } = rodada.data;
 
   // No modo difícil a API não manda as notas. O front não "esconde" número
@@ -121,6 +132,15 @@ export function TelaDeDraft({ partidaId }: { partidaId: string }) {
                 className="hidden sm:block"
               />
             </div>
+
+            <PuloDeAtleta
+              restantes={pulosRestantes}
+              permitidos={pulosPermitidos}
+              carregando={pular.isPending}
+              bloqueado={escolher.isPending}
+              aoPular={() => pular.mutate()}
+              erro={pular.error instanceof ErroDaApi ? pular.error.message : null}
+            />
 
             <p className="text-aco-claro text-sm">
               {asCegas ? (
@@ -172,6 +192,64 @@ export function TelaDeDraft({ partidaId }: { partidaId: string }) {
         <SeuLutador escolhas={escolhasFeitas} total={totalDeRodadas} />
       </div>
     </main>
+  );
+}
+
+/**
+ * A dispensa do atleta da vez.
+ *
+ * A cota é escassa de propósito — dois no fácil, um no difícil —, então o painel
+ * mostra quantos restam em vez de só oferecer o botão: é essa informação que
+ * transforma "pular" em decisão. Quando acabam, o botão some, porque um botão
+ * desabilitado para sempre é só ruído ocupando espaço.
+ */
+function PuloDeAtleta({
+  restantes,
+  permitidos,
+  carregando,
+  bloqueado,
+  aoPular,
+  erro,
+}: {
+  restantes: number;
+  permitidos: number;
+  carregando: boolean;
+  bloqueado: boolean;
+  aoPular: () => void;
+  erro: string | null;
+}) {
+  if (permitidos === 0) return null;
+
+  const acabaram = restantes <= 0;
+
+  return (
+    <div className="border-grafite-borda flex flex-wrap items-center justify-between gap-3 border-t border-dashed pt-4">
+      <div>
+        <Etiqueta className="text-[10px]">
+          {acabaram
+            ? "Você já usou seus pulos"
+            : `${restantes} de ${permitidos} pulo${permitidos > 1 ? "s" : ""} restante${restantes > 1 ? "s" : ""}`}
+        </Etiqueta>
+        <p className="text-aco mt-1 text-xs">
+          {acabaram
+            ? "Daqui em diante é escolher entre o que vier."
+            : "Não serve para o que falta? Dispense e receba outro atleta."}
+        </p>
+      </div>
+
+      {!acabaram && (
+        <button
+          type="button"
+          onClick={aoPular}
+          disabled={carregando || bloqueado}
+          className="font-display border-grafite-borda text-aco-claro hover:border-fight hover:text-gelo shrink-0 cursor-pointer border px-4 py-2 text-xs tracking-[0.18em] uppercase transition-colors disabled:cursor-not-allowed disabled:opacity-40"
+        >
+          {carregando ? "Trocando..." : "Dispensar atleta"}
+        </button>
+      )}
+
+      {erro && <p className="text-fight-claro w-full text-xs">{erro}</p>}
+    </div>
   );
 }
 
