@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useState } from "react";
 
+import { FOTOS_DOS_LUTADORES } from "@/lib/fotos-dos-lutadores";
 import { cn } from "@/lib/utils";
 
 /**
@@ -17,7 +18,7 @@ import { cn } from "@/lib/utils";
  */
 
 /** Formatos tentados, em ordem, antes de desistir e mostrar a silhueta. */
-const FORMATOS = ["png", "jpg"] as const;
+const FORMATOS_ALTERNATIVOS = ["avif", "png", "jpg"] as const;
 
 export function RostoDoAtleta({
   slug,
@@ -30,8 +31,13 @@ export function RostoDoAtleta({
   className?: string;
   tamanho?: number;
 }) {
-  const [tentativa, setTentativa] = useState(0);
-  const semFoto = tentativa >= FORMATOS.length;
+  const candidatos = [
+    ...(FOTOS_DOS_LUTADORES[slug] ? [FOTOS_DOS_LUTADORES[slug]] : []),
+    ...FORMATOS_ALTERNATIVOS.map((formato) => `/fighters/${slug}.${formato}`),
+  ];
+  const [falha, setFalha] = useState({ slug, tentativa: 0 });
+  const tentativa = falha.slug === slug ? falha.tentativa : 0;
+  const semFoto = tentativa >= candidatos.length;
 
   return (
     <span
@@ -47,12 +53,17 @@ export function RostoDoAtleta({
         <Image
           // A key força o Next a refazer a requisição ao trocar de formato;
           // sem ela ele reaproveita o elemento e o onError não dispara de novo.
-          key={FORMATOS[tentativa]}
-          src={`/fighters/${slug}.${FORMATOS[tentativa]}`}
+          key={candidatos[tentativa]}
+          src={candidatos[tentativa]}
           alt={nome}
           width={tamanho}
           height={tamanho}
-          onError={() => setTentativa((atual) => atual + 1)}
+          onError={() =>
+            setFalha((atual) => ({
+              slug,
+              tentativa: atual.slug === slug ? atual.tentativa + 1 : 1,
+            }))
+          }
           // `object-top` porque o rosto quase sempre está no terço superior da
           // foto; centralizar cortaria a cabeça na maioria delas.
           className="h-full w-full object-cover object-top"
