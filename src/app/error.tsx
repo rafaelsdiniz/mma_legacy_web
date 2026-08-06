@@ -46,7 +46,7 @@ export default function Erro({
 
         <p className="text-aco-claro mt-3 max-w-md text-sm leading-relaxed">
           Alguma coisa quebrou do nosso lado. Se você acabou de abrir o site, o
-          servidor pode estar acordando — tentar de novo costuma resolver.
+          servidor pode estar acordando. Tentar de novo costuma resolver.
         </p>
 
         <div className="mt-9 flex flex-col gap-3 sm:flex-row">

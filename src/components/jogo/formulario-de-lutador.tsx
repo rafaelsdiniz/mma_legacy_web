@@ -155,7 +155,7 @@ export function FormularioDeLutador() {
         </Campo>
 
         <Campo
-          rotulo={`Idade de estreia — ${idade || 22} anos`}
+          rotulo={`Idade de estreia · ${idade || 22} anos`}
           erro={errors.idadeInicial?.message}
           className="sm:col-span-2"
         >
@@ -168,7 +168,7 @@ export function FormularioDeLutador() {
             className="accent-fight w-full"
           />
           <p className="text-aco-claro mt-2 text-xs">
-            Estrear cedo dá mais anos de carreira para evoluir — e mais tempo para
+            Estrear cedo dá mais anos de carreira para evoluir, e mais tempo para
             o corpo cobrar a conta.
           </p>
         </Campo>
@@ -190,7 +190,7 @@ export function FormularioDeLutador() {
             valor="Dificil"
             titulo="Difícil"
             resumo="Notas ocultas"
-            detalhe="Nenhum número até o fim. Você escolhe pelo que sabe de MMA — e só descobre o que montou no final."
+            detalhe="Nenhum número até o fim. Você escolhe pelo que sabe de MMA e só descobre o que montou no final."
             selecionado={dificuldade === "Dificil"}
             registro={register("nivelDeDificuldade")}
           />
