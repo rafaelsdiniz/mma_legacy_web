@@ -103,11 +103,24 @@ export interface LutadorDoAcervo {
   nome: string;
   slug: string;
   pais: string;
+  ehLenda: boolean;
+  categoria: CategoriaDePeso | null;
+  categoriaTexto: string | null;
+  /** 0 é o campeão; 1 a 15, os ranqueados; nulo para quem está fora. */
+  posicaoNoRanking: number | null;
   overall: number;
   estilo: EstiloDeLuta;
   maiorQualidade: string;
   principalFraqueza: string;
   notas: NotaDeHabilidade[];
+}
+
+/** Uma divisão com o campeão e os quinze ranqueados, na ordem do ranking. */
+export interface DivisaoDoRanking {
+  categoria: CategoriaDePeso;
+  categoriaTexto: string;
+  campeao: LutadorDoAcervo | null;
+  ranqueados: LutadorDoAcervo[];
 }
 
 export interface Ficha {

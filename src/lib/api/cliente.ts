@@ -1,6 +1,7 @@
 import type {
   Carreira,
   CriarPartidaRequisicao,
+  DivisaoDoRanking,
   Habilidade,
   LutadorDoAcervo,
   Partida,
@@ -96,6 +97,8 @@ export const api = {
   saude: () => requisitar<{ situacao: string }>("/saude"),
 
   listarLutadores: () => requisitar<LutadorDoAcervo[]>("/lutadores"),
+
+  obterRanking: () => requisitar<DivisaoDoRanking[]>("/lutadores/ranking"),
 
   criarPartida: (dados: CriarPartidaRequisicao) =>
     requisitar<Partida>("/partidas", {

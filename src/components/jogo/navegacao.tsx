@@ -35,6 +35,7 @@ interface SecaoDeMenu {
 
 const SECOES: SecaoDeMenu[] = [
   { rotulo: "Início", href: "/" },
+  { rotulo: "Ranking", href: "/ranking" },
   {
     rotulo: "Acervo",
     href: "/lutadores",
@@ -43,6 +44,11 @@ const SECOES: SecaoDeMenu[] = [
         href: "/lutadores",
         rotulo: "Todos os atletas",
         descricao: "Notas, estilo e overall de cada um do acervo",
+      },
+      {
+        href: "/ranking",
+        rotulo: "Ranking das divisões",
+        descricao: "A escada que sua carreira vai subir, das oito categorias",
       },
       {
         href: "/creditos",
@@ -258,6 +264,7 @@ export function Rodape() {
           links={[
             { href: "/", rotulo: "Início" },
             { href: "/criar", rotulo: "Montar lutador" },
+            { href: "/ranking", rotulo: "Ranking das divisões" },
             { href: "/lutadores", rotulo: "Acervo de atletas" },
           ]}
         />
