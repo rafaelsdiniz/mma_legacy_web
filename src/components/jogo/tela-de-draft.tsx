@@ -76,9 +76,19 @@ export function TelaDeDraft({ partidaId }: { partidaId: string }) {
     );
   }
 
-  const { atleta, ordem, totalDeRodadas, habilidadesDisponiveis, escolhasFeitas } =
-    rodada.data;
+  const {
+    atleta,
+    ordem,
+    totalDeRodadas,
+    habilidadesDisponiveis,
+    escolhasFeitas,
+    nivelDeDificuldade,
+  } = rodada.data;
 
+  // No modo difícil a API não manda as notas. O front não "esconde" número
+  // nenhum: ele simplesmente não recebe, e é isso que impede o jogador de ler
+  // as notas na aba de rede do navegador.
+  const asCegas = nivelDeDificuldade === "Dificil";
   const disponiveis = new Set(habilidadesDisponiveis);
   const jaEscolhidas = new Map(
     escolhasFeitas.map((escolha) => [escolha.habilidade, escolha]),
@@ -96,7 +106,10 @@ export function TelaDeDraft({ partidaId }: { partidaId: string }) {
           <div className="flex flex-col gap-5 p-5 sm:p-6">
             <div className="flex items-start justify-between gap-4">
               <div>
-                <Etiqueta>Rodada {ordem} de {totalDeRodadas}</Etiqueta>
+                <Etiqueta>
+                  Rodada {ordem} de {totalDeRodadas}
+                  {asCegas && <span className="text-fight-claro"> · às cegas</span>}
+                </Etiqueta>
                 <h1 className="mt-1 text-3xl leading-none sm:text-4xl">{atleta.nome}</h1>
                 <p className="text-aco-claro mt-1 text-sm">{atleta.pais}</p>
               </div>
@@ -104,18 +117,29 @@ export function TelaDeDraft({ partidaId }: { partidaId: string }) {
             </div>
 
             <p className="text-aco-claro text-sm">
-              Escolha <span className="text-gelo font-semibold">uma</span> habilidade.
-              As outras sete vão embora com ele.
+              {asCegas ? (
+                <>
+                  Sem notas. Escolha{" "}
+                  <span className="text-gelo font-semibold">uma</span> habilidade pelo
+                  que você sabe deste lutador — o resultado só aparece no fim.
+                </>
+              ) : (
+                <>
+                  Escolha <span className="text-gelo font-semibold">uma</span>{" "}
+                  habilidade. As outras sete vão embora com ele.
+                </>
+              )}
             </p>
 
             <ul className="flex flex-col gap-2">
               {HABILIDADES.map((habilidade) => {
-                const nota = atleta.notas.find((n) => n.habilidade === habilidade)!;
+                const nota = atleta.notas.find((n) => n.habilidade === habilidade);
                 const ocupadaPor = jaEscolhidas.get(habilidade);
 
                 return (
                   <li key={habilidade}>
                     <OpcaoDeHabilidade
+                      habilidade={habilidade}
                       nota={nota}
                       disponivel={disponiveis.has(habilidade)}
                       ocupadaPor={ocupadaPor}
@@ -153,6 +177,7 @@ export function TelaDeDraft({ partidaId }: { partidaId: string }) {
  * que o jogador tem. Ver "99 — você tem 76" é o que faz doer.
  */
 function OpcaoDeHabilidade({
+  habilidade,
   nota,
   disponivel,
   ocupadaPor,
@@ -161,7 +186,9 @@ function OpcaoDeHabilidade({
   carregando,
   aoEscolher,
 }: {
-  nota: NotaDeHabilidade;
+  habilidade: Habilidade;
+  /** Ausente no modo difícil: a API não envia as notas. */
+  nota?: NotaDeHabilidade;
   disponivel: boolean;
   ocupadaPor?: EscolhaFeita;
   descartada: boolean;
@@ -169,25 +196,43 @@ function OpcaoDeHabilidade({
   carregando: boolean;
   aoEscolher: () => void;
 }) {
+  const rotulo = nota?.nome ?? rotuloVazio(habilidade);
+
   if (!disponivel && ocupadaPor) {
-    const perdeu = nota.nota > ocupadaPor.nota;
+    // A faca girando: mostrar a nota deste atleta ao lado da que você já tem só
+    // faz sentido quando os dois números existem.
+    const comparavel = nota !== undefined && ocupadaPor.nota !== null;
+    const perdeu = comparavel && nota.nota > ocupadaPor.nota!;
 
     return (
       <div className="border-grafite-borda flex items-center gap-3 border border-dashed px-3 py-2.5 opacity-70">
         <span className="font-display text-aco-claro w-28 shrink-0 text-sm tracking-wide uppercase">
-          {nota.nome}
+          {rotulo}
         </span>
-        <span
-          className={cn(
-            "font-display text-lg leading-none font-bold tabular-nums",
-            perdeu ? "text-fight-claro" : "text-aco",
-          )}
-        >
-          {nota.nota}
-        </span>
+
+        {comparavel && (
+          <span
+            className={cn(
+              "font-display text-lg leading-none font-bold tabular-nums",
+              perdeu ? "text-fight-claro" : "text-aco",
+            )}
+          >
+            {nota.nota}
+          </span>
+        )}
+
         <span className="text-aco-claro ml-auto text-right text-xs">
-          você tem <span className="text-gelo font-semibold">{ocupadaPor.nota}</span>
-          <br />
+          {comparavel ? (
+            <>
+              você tem <span className="text-gelo font-semibold">{ocupadaPor.nota}</span>
+              <br />
+            </>
+          ) : (
+            <>
+              já preenchida
+              <br />
+            </>
+          )}
           <span className="text-aco">de {ocupadaPor.atletaNome}</span>
         </span>
       </div>
@@ -205,28 +250,42 @@ function OpcaoDeHabilidade({
         escolhida && "border-legado bg-legado/10",
       )}
     >
-      <span className="font-display w-28 shrink-0 text-sm tracking-wide uppercase">
-        {nota.nome}
+      <span className="font-display flex-1 shrink-0 text-sm tracking-wide uppercase">
+        {rotulo}
       </span>
 
-      <span className="bg-grafite-borda h-2 flex-1 overflow-hidden">
+      {nota ? (
+        <>
+          <span className="bg-grafite-borda h-2 flex-1 overflow-hidden">
+            <span
+              className={cn(
+                "block h-full transition-colors",
+                escolhida ? "bg-legado" : "bg-fight group-hover:bg-fight-claro",
+              )}
+              style={{ width: `${nota.nota}%` }}
+            />
+          </span>
+
+          <span
+            className={cn(
+              "font-display w-9 shrink-0 text-right text-xl leading-none font-bold tabular-nums",
+              escolhida && "text-legado-claro",
+            )}
+          >
+            {nota.nota}
+          </span>
+        </>
+      ) : (
         <span
           className={cn(
-            "block h-full transition-colors",
-            escolhida ? "bg-legado" : "bg-fight group-hover:bg-fight-claro",
+            "font-display shrink-0 text-xl leading-none font-bold",
+            escolhida ? "text-legado-claro" : "text-aco",
           )}
-          style={{ width: `${nota.nota}%` }}
-        />
-      </span>
-
-      <span
-        className={cn(
-          "font-display w-9 shrink-0 text-right text-xl leading-none font-bold tabular-nums",
-          escolhida && "text-legado-claro",
-        )}
-      >
-        {nota.nota}
-      </span>
+          aria-hidden
+        >
+          ?
+        </span>
+      )}
     </button>
   );
 }
@@ -240,8 +299,13 @@ function SeuLutador({
   total: number;
 }) {
   const porHabilidade = new Map(escolhas.map((e) => [e.habilidade, e]));
-  const somaParcial = escolhas.reduce((soma, e) => soma + e.nota, 0);
-  const mediaParcial = escolhas.length ? Math.round(somaParcial / escolhas.length) : 0;
+
+  // No modo difícil não há notas para somar, então a média some junto — mostrar
+  // "0" ou "—" ali só ocuparia espaço com um número que não significa nada.
+  const comNota = escolhas.filter((e) => e.nota !== null);
+  const mediaParcial = comNota.length
+    ? Math.round(comNota.reduce((soma, e) => soma + e.nota!, 0) / comNota.length)
+    : null;
 
   return (
     <Painel className="h-fit">
@@ -280,7 +344,7 @@ function SeuLutador({
                       {escolha.atletaNome}
                     </span>
                     <span className="font-display w-8 text-right text-base font-bold tabular-nums">
-                      {escolha.nota}
+                      {escolha.nota ?? "?"}
                     </span>
                   </>
                 ) : (
@@ -293,14 +357,25 @@ function SeuLutador({
 
         {escolhas.length > 0 && (
           <div className="border-grafite-borda mt-4 border-t pt-4">
-            <Etiqueta>Média parcial</Etiqueta>
-            <p className="font-display text-3xl leading-none font-bold tabular-nums">
-              {mediaParcial}
-            </p>
-            <p className="text-aco mt-1 text-[11px] leading-snug">
-              O overall final é ponderado por habilidade — striking e wrestling
-              pesam mais.
-            </p>
+            {mediaParcial === null ? (
+              <>
+                <Etiqueta>Às cegas</Etiqueta>
+                <p className="text-aco mt-1 text-[11px] leading-snug">
+                  Você só descobre o que montou quando a oitava rodada fechar.
+                </p>
+              </>
+            ) : (
+              <>
+                <Etiqueta>Média parcial</Etiqueta>
+                <p className="font-display text-3xl leading-none font-bold tabular-nums">
+                  {mediaParcial}
+                </p>
+                <p className="text-aco mt-1 text-[11px] leading-snug">
+                  O overall final é ponderado por habilidade — striking e wrestling
+                  pesam mais.
+                </p>
+              </>
+            )}
           </div>
         )}
       </div>

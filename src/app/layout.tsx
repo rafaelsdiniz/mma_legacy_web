@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Rajdhani, Montserrat } from "next/font/google";
 
+import { AberturaDoSite } from "@/components/jogo/abertura-do-site";
 import { Navbar, Rodape } from "@/components/jogo/navegacao";
 import { Provedores } from "@/components/provedores";
 
@@ -40,6 +41,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="textura-arena flex min-h-full flex-col">
         <Provedores>
+          <AberturaDoSite />
           <Navbar />
           {children}
           <Rodape />

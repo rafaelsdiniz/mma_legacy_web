@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, type UseFormRegisterReturn } from "react-hook-form";
 import { z } from "zod";
 
 import { aquecerApi } from "@/lib/api/aquecimento";
@@ -40,6 +40,7 @@ const esquema = z.object({
     .min(18, "A idade de estreia deve estar entre 18 e 35 anos.")
     .max(35, "A idade de estreia deve estar entre 18 e 35 anos."),
   baseDeLuta: z.string().min(1, "Escolha a base de luta."),
+  nivelDeDificuldade: z.enum(["Facil", "Dificil"]),
 });
 
 type Formulario = z.input<typeof esquema>;
@@ -65,6 +66,7 @@ export function FormularioDeLutador() {
       categoriaDePeso: "MeioPesado",
       idadeInicial: 22,
       baseDeLuta: "MuayThai",
+      nivelDeDificuldade: "Facil",
     },
   });
 
@@ -77,6 +79,7 @@ export function FormularioDeLutador() {
         categoriaDePeso: dados.categoriaDePeso as CategoriaDePeso,
         idadeInicial: Number(dados.idadeInicial),
         baseDeLuta: dados.baseDeLuta as BaseDeLuta,
+        nivelDeDificuldade: dados.nivelDeDificuldade,
       }),
     onSuccess: (partida) => router.push(`/partida/${partida.id}/draft`),
   });
@@ -84,6 +87,7 @@ export function FormularioDeLutador() {
   const nome = watch("nome");
   const apelido = watch("apelido");
   const idade = Number(watch("idadeInicial"));
+  const dificuldade = watch("nivelDeDificuldade");
 
   return (
     <form
@@ -163,6 +167,29 @@ export function FormularioDeLutador() {
         </Campo>
       </div>
 
+      <fieldset className="flex flex-col gap-3">
+        <Etiqueta>Nível de dificuldade</Etiqueta>
+
+        <div className="grid gap-3 sm:grid-cols-2">
+          <OpcaoDeDificuldade
+            valor="Facil"
+            titulo="Fácil"
+            resumo="Notas visíveis"
+            detalhe="Você compara os números e decide com a informação toda na mesa."
+            selecionado={dificuldade === "Facil"}
+            registro={register("nivelDeDificuldade")}
+          />
+          <OpcaoDeDificuldade
+            valor="Dificil"
+            titulo="Difícil"
+            resumo="Notas ocultas"
+            detalhe="Nenhum número até o fim. Você escolhe pelo que sabe de MMA — e só descobre o que montou no final."
+            selecionado={dificuldade === "Dificil"}
+            registro={register("nivelDeDificuldade")}
+          />
+        </div>
+      </fieldset>
+
       {criar.isError && (
         <p className="border-fight bg-fight/10 text-fight-claro border-l-2 px-4 py-3 text-sm">
           {criar.error instanceof ErroDaApi
@@ -185,6 +212,58 @@ export function FormularioDeLutador() {
 
 const entrada =
   "recorte-angular-suave w-full border border-grafite-borda bg-grafite-claro px-4 py-2.5 text-gelo outline-none transition-colors focus:border-fight";
+
+/**
+ * Cartão de escolha do modo.
+ *
+ * É um radio de verdade por baixo — o input fica visualmente escondido, não
+ * removido. Assim teclado e leitor de tela continuam navegando o grupo como
+ * esperam, sem precisar reimplementar o comportamento na mão.
+ */
+function OpcaoDeDificuldade({
+  valor,
+  titulo,
+  resumo,
+  detalhe,
+  selecionado,
+  registro,
+}: {
+  valor: string;
+  titulo: string;
+  resumo: string;
+  detalhe: string;
+  selecionado: boolean;
+  registro: UseFormRegisterReturn<"nivelDeDificuldade">;
+}) {
+  return (
+    <label
+      className={cn(
+        "recorte-angular-suave cursor-pointer border p-4 transition-colors",
+        selecionado
+          ? "border-fight bg-fight/10"
+          : "border-grafite-borda bg-grafite-claro hover:border-aco",
+      )}
+    >
+      <input type="radio" value={valor} className="sr-only" {...registro} />
+
+      <span className="flex items-baseline justify-between gap-2">
+        <span className="font-display text-lg font-bold uppercase">{titulo}</span>
+        <span
+          className={cn(
+            "font-display text-[10px] tracking-widest uppercase",
+            selecionado ? "text-fight-claro" : "text-aco",
+          )}
+        >
+          {resumo}
+        </span>
+      </span>
+
+      <span className="text-aco-claro mt-1.5 block text-xs leading-relaxed">
+        {detalhe}
+      </span>
+    </label>
+  );
+}
 
 function Campo({
   rotulo,

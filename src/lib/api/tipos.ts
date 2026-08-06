@@ -58,6 +58,14 @@ export type EstiloDeLuta =
   | "LutadorDeMovimentacao"
   | "LutadorCompleto";
 
+/**
+ * Quanta informação o jogador vê durante o draft.
+ *
+ * Não altera a simulação: dois lutadores idênticos montados em níveis
+ * diferentes têm exatamente a mesma carreira. O que muda é o mérito.
+ */
+export type NivelDeDificuldade = "Facil" | "Dificil";
+
 export type StatusDaPartida =
   | "DraftEmAndamento"
   | "DraftConcluido"
@@ -129,6 +137,7 @@ export interface Partida {
   seed: number;
   criadaEm: string;
   status: StatusDaPartida;
+  nivelDeDificuldade: NivelDeDificuldade;
   escolhasFeitas: number;
   totalDeRodadas: number;
   ficha: Ficha;
@@ -148,13 +157,15 @@ export interface EscolhaFeita {
   ordem: number;
   habilidade: Habilidade;
   habilidadeNome: string;
-  nota: number;
+  /** Nulo no modo difícil: a nota só é revelada quando o draft fecha. */
+  nota: number | null;
   atletaNome: string;
 }
 
 export interface RodadaAtual {
   ordem: number;
   totalDeRodadas: number;
+  nivelDeDificuldade: NivelDeDificuldade;
   atleta: AtletaDoDraft;
   habilidadesDisponiveis: Habilidade[];
   escolhasFeitas: EscolhaFeita[];
@@ -219,4 +230,5 @@ export interface CriarPartidaRequisicao {
   idadeInicial: number;
   baseDeLuta: BaseDeLuta;
   seed?: number | null;
+  nivelDeDificuldade?: NivelDeDificuldade;
 }
