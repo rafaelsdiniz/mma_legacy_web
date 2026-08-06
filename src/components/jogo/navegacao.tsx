@@ -33,26 +33,13 @@ interface SecaoDeMenu {
   itens?: ItemDeMenu[];
 }
 
+// Menu plano, sem submenu. "Acervo" era um rótulo de banco de dados, não de
+// jogo: ninguém chega ao site querendo ver um acervo, chega querendo saber quem
+// pode escolher no draft.
 const SECOES: SecaoDeMenu[] = [
   { rotulo: "Início", href: "/" },
+  { rotulo: "Lutadores", href: "/lutadores" },
   { rotulo: "Ranking", href: "/ranking" },
-  {
-    rotulo: "Acervo",
-    href: "/lutadores",
-    itens: [
-      {
-        href: "/lutadores",
-        rotulo: "Todos os atletas",
-        descricao: "Notas, estilo e overall de cada um do acervo",
-      },
-      {
-        href: "/ranking",
-        rotulo: "Ranking das divisões",
-        descricao: "A escada que sua carreira vai subir, das oito categorias",
-      },
-
-    ],
-  },
   { rotulo: "Jogar", href: "/criar" },
 ];
 
@@ -265,7 +252,7 @@ export function Rodape() {
             { href: "/", rotulo: "Início" },
             { href: "/criar", rotulo: "Montar lutador" },
             { href: "/ranking", rotulo: "Ranking das divisões" },
-            { href: "/lutadores", rotulo: "Acervo de atletas" },
+            { href: "/lutadores", rotulo: "Todos os lutadores" },
           ]}
         />
 
