@@ -96,11 +96,18 @@ export function FormularioDeLutador() {
     >
       {/* Preview do cartaz: transforma o formulário em algo que já é o jogo. */}
       <Painel destaque>
-        <div className="px-5 py-6 text-center">
-          <Etiqueta>Como vai aparecer no cartaz</Etiqueta>
-          <p className="font-display mt-2 text-2xl leading-tight font-bold break-words uppercase sm:text-3xl">
-            <MontarCartaz nome={nome} apelido={apelido} />
-          </p>
+        <div className="grid min-h-56 overflow-hidden sm:grid-cols-[220px_1fr] sm:items-center">
+          <LutadorNaoRevelado />
+          <div className="px-5 py-6 text-center sm:text-left">
+            <Etiqueta>Identidade em construção</Etiqueta>
+            <p className="font-display mt-2 text-2xl leading-tight font-bold break-words uppercase sm:text-3xl">
+              <MontarCartaz nome={nome} apelido={apelido} />
+            </p>
+            <p className="text-aco mt-3 text-xs leading-relaxed">
+              O corpo ainda é uma sombra. As oito escolhas do draft vão revelar
+              que tipo de lutador existe aqui.
+            </p>
+          </div>
         </div>
       </Painel>
 
@@ -148,7 +155,7 @@ export function FormularioDeLutador() {
         </Campo>
 
         <Campo
-          rotulo={`Idade de estreia — ${idade || 22} anos`}
+          rotulo={`Idade de estreia · ${idade || 22} anos`}
           erro={errors.idadeInicial?.message}
           className="sm:col-span-2"
         >
@@ -161,7 +168,7 @@ export function FormularioDeLutador() {
             className="accent-fight w-full"
           />
           <p className="text-aco-claro mt-2 text-xs">
-            Estrear cedo dá mais anos de carreira para evoluir — e mais tempo para
+            Estrear cedo dá mais anos de carreira para evoluir, e mais tempo para
             o corpo cobrar a conta.
           </p>
         </Campo>
@@ -183,7 +190,7 @@ export function FormularioDeLutador() {
             valor="Dificil"
             titulo="Difícil"
             resumo="Notas ocultas"
-            detalhe="Nenhum número até o fim. Você escolhe pelo que sabe de MMA — e só descobre o que montou no final."
+            detalhe="Nenhum número até o fim. Você escolhe pelo que sabe de MMA e só descobre o que montou no final."
             selecionado={dificuldade === "Dificil"}
             registro={register("nivelDeDificuldade")}
           />
@@ -207,6 +214,30 @@ export function FormularioDeLutador() {
         {criar.isPending ? "Sorteando..." : "Iniciar draft"}
       </Botao>
     </form>
+  );
+}
+
+/** Silhueta do lutador antes de o draft revelar seus atributos. */
+function LutadorNaoRevelado() {
+  return (
+    <div className="relative hidden h-full min-h-56 overflow-hidden border-r border-grafite-borda bg-[radial-gradient(circle_at_50%_30%,rgba(193,18,31,0.15),transparent_58%)] sm:block">
+      <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-grafite-claro to-transparent" />
+      <svg
+        viewBox="0 0 180 230"
+        className="absolute inset-x-0 bottom-0 mx-auto h-[94%] w-auto text-black drop-shadow-[0_0_22px_rgba(193,18,31,0.2)]"
+        fill="currentColor"
+        aria-label="Lutador ainda não revelado"
+        role="img"
+      >
+        <circle cx="90" cy="42" r="28" />
+        <path d="M61 76c8-7 18-10 29-10s21 3 29 10l15 40-17 8-6-25v35l18 87H51l18-87V99l-6 25-17-8 15-40Z" />
+        <path d="m51 221 18-87h42l18 87h-26l-13-62-13 62H51Z" />
+        <path d="M43 112c5-4 12-3 16 2l7 9-14 13-10-10c-4-4-4-10 1-14Zm94 0c-5-4-12-3-16 2l-7 9 14 13 10-10c4-4 4-10-1-14Z" />
+      </svg>
+      <span className="font-display text-aco absolute bottom-3 left-0 w-full text-center text-[10px] tracking-[0.3em] uppercase">
+        Não revelado
+      </span>
+    </div>
   );
 }
 

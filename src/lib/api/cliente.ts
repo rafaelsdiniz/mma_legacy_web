@@ -1,5 +1,4 @@
 import type {
-  Carreira,
   CriarPartidaRequisicao,
   DivisaoDoRanking,
   Habilidade,
@@ -7,6 +6,7 @@ import type {
   Partida,
   Resultado,
   RodadaAtual,
+  SituacaoDaCarreira,
 } from "./tipos";
 
 const URL_DA_API = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5080/api";
@@ -117,11 +117,35 @@ export const api = {
       body: JSON.stringify({ atletaId, habilidade }),
     }),
 
-  simularCarreira: (partidaId: string) =>
-    requisitar<Carreira>(`/partidas/${partidaId}/carreira/simular`, { method: "POST" }),
+  estrearCarreira: (partidaId: string) =>
+    requisitar<SituacaoDaCarreira>(`/partidas/${partidaId}/carreira/estrear`, {
+      method: "POST",
+    }),
 
   obterCarreira: (partidaId: string) =>
-    requisitar<Carreira>(`/partidas/${partidaId}/carreira`),
+    requisitar<SituacaoDaCarreira>(`/partidas/${partidaId}/carreira`),
+
+  aceitarOferta: (partidaId: string, indice: number) =>
+    requisitar<SituacaoDaCarreira>(`/partidas/${partidaId}/carreira/aceitar`, {
+      method: "POST",
+      body: JSON.stringify({ indice }),
+    }),
+
+  recusarOfertas: (partidaId: string) =>
+    requisitar<SituacaoDaCarreira>(`/partidas/${partidaId}/carreira/recusar`, {
+      method: "POST",
+    }),
+
+  aposentar: (partidaId: string) =>
+    requisitar<SituacaoDaCarreira>(`/partidas/${partidaId}/carreira/aposentar`, {
+      method: "POST",
+    }),
+
+  simularOResto: (partidaId: string) =>
+    requisitar<SituacaoDaCarreira>(
+      `/partidas/${partidaId}/carreira/simular-o-resto`,
+      { method: "POST" },
+    ),
 
   obterResultado: (partidaId: string) =>
     requisitar<Resultado>(`/partidas/${partidaId}/resultado`),

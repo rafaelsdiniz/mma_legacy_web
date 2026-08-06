@@ -127,7 +127,7 @@ export function TelaDeDraft({ partidaId }: { partidaId: string }) {
                 <>
                   Sem notas. Escolha{" "}
                   <span className="text-gelo font-semibold">uma</span> habilidade pelo
-                  que você sabe deste lutador — o resultado só aparece no fim.
+                  que você sabe deste lutador. O resultado só aparece no fim.
                 </>
               ) : (
                 <>
@@ -377,7 +377,7 @@ function SeuLutador({
                   {mediaParcial}
                 </p>
                 <p className="text-aco mt-1 text-[11px] leading-snug">
-                  O overall final é ponderado por habilidade — striking e wrestling
+                  O overall final é ponderado por habilidade: striking e wrestling
                   pesam mais.
                 </p>
               </>

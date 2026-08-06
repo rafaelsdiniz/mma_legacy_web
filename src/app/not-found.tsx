@@ -27,7 +27,7 @@ export default function NaoEncontrado() {
 
         <p className="text-aco-claro mt-3 max-w-md text-sm leading-relaxed">
           O endereço não existe, ou a partida que estava aqui não foi encontrada.
-          Carreiras ficam guardadas pelo link — se você perdeu o endereço, não há
+          Carreiras ficam guardadas pelo link. Se você perdeu o endereço, não há
           como recuperá-la.
         </p>
 
