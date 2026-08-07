@@ -286,6 +286,18 @@ export interface EstadoDaCarreira {
   compromissosNaTemporada: number;
   compromissosPorTemporada: number;
   vezesDispensado: number;
+  /** 0 é campeão, 1 a 15 ranqueado, nulo para quem ainda não entrou. */
+  posicaoNoRanking: number | null;
+}
+
+/** Uma linha da tabela da divisão, já com o jogador encaixado nela. */
+export interface LinhaDoRanking {
+  posicao: number;
+  nome: string;
+  /** Nulo na linha do jogador, que não tem foto no acervo. */
+  slug: string | null;
+  overall: number;
+  ehOJogador: boolean;
 }
 
 export interface OfertaDeLuta {
@@ -303,6 +315,10 @@ export interface OfertaDeLuta {
   defesaDeCinturao: boolean;
   roundsProgramados: number;
   chamada: string;
+  /** Preenchido só quando o adversário é atleta real do acervo. */
+  slugDoAdversario: string | null;
+  /** Posição dele no ranking, que a vitória converte na sua. */
+  posicaoDoAdversario: number | null;
 }
 
 export interface RoundDaLuta {
@@ -334,6 +350,10 @@ export interface SituacaoDaCarreira {
   carreira: Carreira;
   ultimaLuta: DesfechoDaUltimaLuta | null;
   eventos: EventoDaCarreira[];
+  /** Vazio antes de o lutador chegar ao UFC, onde não há ranking a mostrar. */
+  rankingDaDivisao: LinhaDoRanking[];
+  /** Onde você estava antes desta jogada, para animar o movimento. */
+  posicaoAnterior: number | null;
 }
 
 export interface Resultado {

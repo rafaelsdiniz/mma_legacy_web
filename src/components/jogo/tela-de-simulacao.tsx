@@ -2,8 +2,11 @@
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
+import { AvisoDeSubida } from "@/components/jogo/aviso-de-subida";
 import { Botao, BotaoLink } from "@/components/jogo/botao";
 import { Etiqueta, Painel, TituloAngular } from "@/components/jogo/painel";
+import { RankingDaDivisao } from "@/components/jogo/ranking-da-divisao";
+import { RostoDoAtleta } from "@/components/jogo/rosto-do-atleta";
 import { api, ErroDaApi } from "@/lib/api/cliente";
 import type {
   EtapaDaCarreira,
@@ -56,13 +59,34 @@ export function TelaDeSimulacao({ partidaId }: { partidaId: string }) {
 
   const situacao = carreira.data;
 
+  const noUfc = situacao.rankingDaDivisao.length > 0;
+
   return (
     <main className="relative mx-auto flex w-full max-w-6xl flex-1 flex-col px-4 py-7 sm:px-6">
       <Cabecalho situacao={situacao} />
-      <RankingDaCarreira
-        key={`${situacao.estado.etapa}-${situacao.carreira.totalDeLutas}`}
-        situacao={situacao}
+
+      <AvisoDeSubida
+        posicaoAtual={situacao.estado.posicaoNoRanking}
+        posicaoAnterior={situacao.posicaoAnterior}
+        chaveDoMomento={situacao.carreira.totalDeLutas}
       />
+
+      {/* Enquanto o lutador não chega ao UFC não existe ranking a mostrar, e a
+          escada de etapas é o que conta onde ele está. Dali em diante ela dá
+          lugar à tabela real da divisão. */}
+      {noUfc ? (
+        <RankingDaDivisao
+          linhas={situacao.rankingDaDivisao}
+          categoria={situacao.estado.categoriaTexto}
+          posicaoAnterior={situacao.posicaoAnterior}
+          className="mt-7 lg:hidden"
+        />
+      ) : (
+        <RankingDaCarreira
+          key={`${situacao.estado.etapa}-${situacao.carreira.totalDeLutas}`}
+          situacao={situacao}
+        />
+      )}
 
       {situacao.eventos.length > 0 && <Eventos eventos={situacao.eventos} />}
       {situacao.ultimaLuta && (
@@ -96,11 +120,25 @@ export function TelaDeSimulacao({ partidaId }: { partidaId: string }) {
             carregando={jogar.isPending}
             aceitar={(indice) => jogar.mutate({ tipo: "aceitar", indice })}
           />
-          <PainelDeDecisao
-            situacao={situacao}
-            carregando={jogar.isPending}
-            agir={(acao) => jogar.mutate(acao)}
-          />
+
+          {/* A coluna gruda ao rolar: com a tabela do lado o tempo todo, aceitar
+              a luta contra o #6 deixa de ser um nome e passa a ser um degrau
+              que dá para ver. */}
+          <div className="flex flex-col gap-6 lg:sticky lg:top-6 lg:self-start">
+            <PainelDeDecisao
+              situacao={situacao}
+              carregando={jogar.isPending}
+              agir={(acao) => jogar.mutate(acao)}
+            />
+            {noUfc && (
+              <RankingDaDivisao
+                linhas={situacao.rankingDaDivisao}
+                categoria={situacao.estado.categoriaTexto}
+                posicaoAnterior={situacao.posicaoAnterior}
+                className="hidden lg:flex"
+              />
+            )}
+          </div>
         </div>
       )}
 
@@ -197,11 +235,33 @@ function Ofertas({ ofertas, carregando, aceitar }: { ofertas: OfertaDeLuta[]; ca
         {ofertas.map((oferta, indice) => (
           <Painel key={oferta.indice} destaque={oferta.valendoCinturao} className="animate-entrada" style={{ animationDelay: `${indice * 100}ms` }}>
             <div className="flex h-full flex-col p-5">
-              <Etiqueta className={oferta.valendoCinturao ? "text-legado-claro" : undefined}>
-                {oferta.valendoCinturao ? "Valendo cinturão" : `${oferta.roundsProgramados} rounds`}
-              </Etiqueta>
-              <h2 className="mt-1 text-2xl leading-none">{oferta.adversario}</h2>
-              <p className="text-aco mt-1 text-xs">{oferta.cartelDoAdversario} · {ESTILOS[oferta.estiloDoAdversario]}</p>
+              <div className="flex items-start gap-3">
+                {/* Adversário do ranking tem rosto; o inventado do regional,
+                    não. A foto é o que faz "vs Alex Pereira" parecer uma luta
+                    de verdade em vez de uma linha de texto. */}
+                {oferta.slugDoAdversario && (
+                  <RostoDoAtleta
+                    slug={oferta.slugDoAdversario}
+                    nome={oferta.adversario}
+                    tamanho={56}
+                  />
+                )}
+
+                <div className="min-w-0 flex-1">
+                  <Etiqueta className={oferta.valendoCinturao ? "text-legado-claro" : undefined}>
+                    {oferta.valendoCinturao ? "Valendo cinturão" : `${oferta.roundsProgramados} rounds`}
+                  </Etiqueta>
+                  <h2 className="mt-1 truncate text-2xl leading-none">{oferta.adversario}</h2>
+                  <p className="text-aco mt-1 text-xs">
+                    {oferta.posicaoDoAdversario === null
+                      ? oferta.cartelDoAdversario
+                      : oferta.posicaoDoAdversario === 0
+                        ? "Campeão da divisão"
+                        : `#${oferta.posicaoDoAdversario} do ranking`}{" "}
+                    · {ESTILOS[oferta.estiloDoAdversario]}
+                  </p>
+                </div>
+              </div>
               <p className="text-aco-claro my-4 text-sm leading-snug">{oferta.chamada}</p>
               <div className="mb-4 flex items-end justify-between border-y border-grafite-borda py-3">
                 <span className="text-aco text-xs">{oferta.categoriaTexto}</span>
