@@ -43,6 +43,19 @@ const SECOES: SecaoDeMenu[] = [
   { rotulo: "Jogar", href: "/criar" },
 ];
 
+/**
+ * As telas em que o site sai da frente.
+ *
+ * O draft é uma sequência de oito decisões irreversíveis e a carreira é uma
+ * partida inteira; nas duas, um link no topo só serve para o jogador abandonar
+ * o que estava fazendo sem querer. Na carreira há um motivo a mais: a tela foi
+ * desenhada para caber na altura do navegador, e cada faixa de navegação come
+ * espaço que era da decisão.
+ */
+function ehTelaDeJogo(caminho: string) {
+  return caminho.includes("/draft") || caminho.includes("/carreira");
+}
+
 export function Navbar() {
   const caminho = usePathname();
   const [secaoAberta, setSecaoAberta] = useState<string | null>(null);
@@ -59,10 +72,7 @@ export function Navbar() {
     return () => cancelAnimationFrame(quadro);
   }, [caminho]);
 
-  // Durante o draft a navegação some. Aquela tela é uma sequência de oito
-  // decisões irreversíveis, e um link no topo só serve para o jogador
-  // abandonar a partida pela metade sem querer.
-  if (caminho.includes("/draft")) {
+  if (ehTelaDeJogo(caminho)) {
     return null;
   }
 
@@ -239,7 +249,7 @@ function MenuMobile({ caminho }: { caminho: string }) {
 export function Rodape() {
   const caminho = usePathname();
 
-  if (caminho.includes("/draft")) {
+  if (ehTelaDeJogo(caminho)) {
     return null;
   }
 

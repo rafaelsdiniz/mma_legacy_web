@@ -46,12 +46,12 @@ export function LutaRoundARound({ desfecho }: { desfecho: DesfechoDaUltimaLuta }
   const venceu = desfecho.luta.resultado === "Vitoria";
 
   return (
-    <Painel destaque={desfecho.luta.valendoCinturao} className="animate-entrada mt-6">
-      <div className="p-5 sm:p-6">
+    <Painel destaque={desfecho.luta.valendoCinturao} className="animate-entrada shrink-0">
+      <div className="p-4">
         <div className="flex flex-wrap items-end justify-between gap-3">
           <div>
             <Etiqueta>Última luta</Etiqueta>
-            <h2 className="text-2xl">vs. {desfecho.luta.adversario}</h2>
+            <h2 className="text-xl leading-none">vs. {desfecho.luta.adversario}</h2>
           </div>
 
           {terminou ? (
@@ -72,7 +72,7 @@ export function LutaRoundARound({ desfecho }: { desfecho: DesfechoDaUltimaLuta }
           )}
         </div>
 
-        <ol className="mt-5 grid gap-2 sm:grid-cols-3 lg:grid-cols-5">
+        <ol className="mt-3 grid grid-cols-2 gap-1.5 sm:grid-cols-3 lg:grid-cols-5">
           {desfecho.rounds.slice(0, revelados).map((round) => (
             <Round key={round.numero} round={round} />
           ))}
@@ -81,10 +81,10 @@ export function LutaRoundARound({ desfecho }: { desfecho: DesfechoDaUltimaLuta }
         {!terminou && (
           <Botao
             variante="fantasma"
-            className="mt-4 w-full"
+            className="mt-3 w-full px-4 py-1.5"
             onClick={() => setRevelados(total)}
           >
-            Ver o resultado
+            <span className="text-sm">Ver o resultado</span>
           </Botao>
         )}
       </div>
@@ -104,7 +104,7 @@ function Round({ round }: { round: RoundDaLuta }) {
   return (
     <li
       className={cn(
-        "animate-entrada border p-3",
+        "animate-entrada border p-2",
         venceu
           ? "border-vitoria/50"
           : round.vencedor === "Empate"
@@ -120,15 +120,15 @@ function Round({ round }: { round: RoundDaLuta }) {
           {venceu ? "10–9" : round.vencedor === "Empate" ? "10–10" : "9–10"}
         </span>
       </div>
-      <p className="text-aco mt-2 min-h-8 text-[10px] leading-snug">
+      <p className="text-aco mt-1.5 min-h-7 text-[9px] leading-snug">
         {detalhes.join(" · ") || "trocação equilibrada"}
       </p>
-      <p className="mt-2 text-[10px]">
+      <p className="mt-1.5 text-[9px]">
         Dano: <span className="text-fight-claro">{round.danoDoLutador}</span> /{" "}
         {round.danoDoAdversario}
       </p>
       {round.encerramento && (
-        <p className="text-legado-claro mt-1 text-[10px] font-bold uppercase">
+        <p className="text-legado-claro mt-1 text-[9px] font-bold uppercase">
           {METODOS[round.encerramento]}
         </p>
       )}
