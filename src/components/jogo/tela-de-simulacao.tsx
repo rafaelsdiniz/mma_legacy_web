@@ -6,6 +6,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AvisoDeSubida } from "@/components/jogo/aviso-de-subida";
 import { Botao, BotaoLink } from "@/components/jogo/botao";
 import { EscolhaDoCamp } from "@/components/jogo/escolha-do-camp";
+import { LutaRoundARound } from "@/components/jogo/luta-round-a-round";
 import { Etiqueta, Painel, TituloAngular } from "@/components/jogo/painel";
 import { PainelDeLesao } from "@/components/jogo/painel-de-lesao";
 import { RankingDaDivisao } from "@/components/jogo/ranking-da-divisao";
@@ -19,7 +20,6 @@ import type {
   IntensidadeDoTreino,
   NotaDeHabilidade,
   OfertaDeLuta,
-  RoundDaLuta,
   SituacaoDaCarreira,
 } from "@/lib/api/tipos";
 import {
@@ -28,8 +28,6 @@ import {
   DIFICULDADES,
   ESTILOS,
   INTENSIDADES_DE_TREINO,
-  METODOS,
-  METODOS_CURTOS,
   ORGANIZACOES,
   emPorcentagem,
 } from "@/lib/rotulos";
@@ -120,7 +118,7 @@ export function TelaDeSimulacao({ partidaId }: { partidaId: string }) {
       )}
       {situacao.eventos.length > 0 && <Eventos eventos={situacao.eventos} />}
       {situacao.ultimaLuta && (
-        <UltimaLuta key={situacao.ultimaLuta.luta.ordem} situacao={situacao} />
+        <LutaRoundARound key={situacao.ultimaLuta.luta.ordem} desfecho={situacao.ultimaLuta} />
       )}
 
       {jogar.isPending && (
@@ -489,44 +487,6 @@ function Progresso({ rotulo, atual, total, perigo = false }: { rotulo: string; a
       <div className="mb-1 flex justify-between text-xs"><span className="text-aco-claro">{rotulo}</span><span className="tabular-nums">{atual}/{total}</span></div>
       <div className="bg-grafite-borda h-1.5 overflow-hidden"><span className={cn("block h-full", perigo ? "bg-fight" : "bg-vitoria")} style={{ width: `${porcentagem}%` }} /></div>
     </div>
-  );
-}
-
-function UltimaLuta({ situacao }: { situacao: SituacaoDaCarreira }) {
-  const ultima = situacao.ultimaLuta!;
-  const venceu = ultima.luta.resultado === "Vitoria";
-  return (
-    <Painel destaque={ultima.luta.valendoCinturao} className="mt-6 animate-entrada">
-      <div className="p-5 sm:p-6">
-        <div className="flex flex-wrap items-end justify-between gap-3">
-          <div><Etiqueta>Última luta</Etiqueta><h2 className="text-2xl">vs. {ultima.luta.adversario}</h2></div>
-          <span className={cn("font-display px-3 py-1 text-sm font-bold uppercase", venceu ? "bg-vitoria/15 text-vitoria" : "bg-fight/15 text-fight-claro")}>
-            {venceu ? "Vitória" : ultima.luta.resultado} · {METODOS_CURTOS[ultima.luta.metodo]} {ultima.luta.metodo !== "Decisao" && `R${ultima.luta.roundDoEncerramento}`}
-          </span>
-        </div>
-        <ol className="mt-5 grid gap-2 sm:grid-cols-3 lg:grid-cols-5">
-          {ultima.rounds.map((round) => <Round key={round.numero} round={round} />)}
-        </ol>
-      </div>
-    </Painel>
-  );
-}
-
-function Round({ round }: { round: RoundDaLuta }) {
-  const venceu = round.vencedor === "Lutador";
-  const detalhes = [
-    round.lutadorControlou && "você controlou",
-    round.adversarioControlou && "rival controlou",
-    round.lutadorBuscouQueda && "buscou queda",
-    round.adversarioBuscouQueda && "defendeu quedas",
-  ].filter(Boolean);
-  return (
-    <li style={{ animationDelay: `${round.numero * 110}ms` }} className={cn("animate-entrada border p-3", venceu ? "border-vitoria/50" : round.vencedor === "Empate" ? "border-grafite-borda" : "border-fight/50")}>
-      <div className="flex justify-between"><Etiqueta>Round {round.numero}</Etiqueta><span className={cn("font-display font-bold", venceu ? "text-vitoria" : "text-fight-claro")}>{venceu ? "10–9" : round.vencedor === "Empate" ? "10–10" : "9–10"}</span></div>
-      <p className="text-aco mt-2 min-h-8 text-[10px] leading-snug">{detalhes.join(" · ") || "trocação equilibrada"}</p>
-      <p className="mt-2 text-[10px]">Dano: <span className="text-fight-claro">{round.danoDoLutador}</span> / {round.danoDoAdversario}</p>
-      {round.encerramento && <p className="text-legado-claro mt-1 text-[10px] font-bold uppercase">{METODOS[round.encerramento]}</p>}
-    </li>
   );
 }
 
