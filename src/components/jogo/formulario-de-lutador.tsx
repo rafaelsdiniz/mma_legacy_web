@@ -15,6 +15,7 @@ import { Etiqueta, Painel } from "@/components/jogo/painel";
 import { api, ErroDaApi } from "@/lib/api/cliente";
 import type { BaseDeLuta, CategoriaDePeso } from "@/lib/api/tipos";
 import { BASES, CATEGORIAS } from "@/lib/rotulos";
+import { salvarPartida } from "@/lib/partidas-salvas";
 import { cn } from "@/lib/utils";
 
 /**
@@ -82,7 +83,17 @@ export function FormularioDeLutador() {
         baseDeLuta: dados.baseDeLuta as BaseDeLuta,
         nivelDeDificuldade: dados.nivelDeDificuldade,
       }),
-    onSuccess: (partida) => router.push(`/partida/${partida.id}/draft`),
+    onSuccess: (partida) => {
+      // Guarda o atalho antes de sair da tela: a partir daqui a carreira existe
+      // só pela URL, e fechar a aba sem isto significa perder o lutador.
+      salvarPartida({
+        id: partida.id,
+        nomeDeCartaz: partida.ficha.nomeDeCartaz,
+        status: partida.status,
+      });
+
+      router.push(`/partida/${partida.id}/draft`);
+    },
   });
 
   const nome = watch("nome");

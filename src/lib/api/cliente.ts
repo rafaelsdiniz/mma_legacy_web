@@ -2,6 +2,7 @@ import type {
   CriarPartidaRequisicao,
   DivisaoDoRanking,
   Habilidade,
+  IntensidadeDoTreino,
   LutadorDoAcervo,
   Partida,
   Resultado,
@@ -129,11 +130,29 @@ export const api = {
   obterCarreira: (partidaId: string) =>
     requisitar<SituacaoDaCarreira>(`/partidas/${partidaId}/carreira`),
 
-  aceitarOferta: (partidaId: string, indice: number) =>
+  /**
+   * Aceita uma oferta e, junto com ela, decide o camp que antecede a luta.
+   *
+   * As duas escolhas viajam no mesmo pedido porque são tomadas juntas: contra
+   * quem se vai lutar e com que corpo se vai chegar lá.
+   */
+  aceitarOferta: (
+    partidaId: string,
+    indice: number,
+    focoDoCamp: Habilidade | null,
+    intensidade: IntensidadeDoTreino,
+  ) =>
     requisitar<SituacaoDaCarreira>(`/partidas/${partidaId}/carreira/aceitar`, {
       method: "POST",
-      body: JSON.stringify({ indice }),
+      body: JSON.stringify({ indice, focoDoCamp, intensidade }),
     }),
+
+  /** Passa um compromisso do calendário tratando a lesão. */
+  recuperar: (partidaId: string) =>
+    requisitar<SituacaoDaCarreira>(`/partidas/${partidaId}/carreira/recuperar`, {
+      method: "POST",
+    }),
+
 
   recusarOfertas: (partidaId: string) =>
     requisitar<SituacaoDaCarreira>(`/partidas/${partidaId}/carreira/recusar`, {

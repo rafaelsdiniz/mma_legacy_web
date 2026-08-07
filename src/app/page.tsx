@@ -1,6 +1,7 @@
 import { getImageProps } from "next/image";
 
 import { BotaoLink } from "@/components/jogo/botao";
+import { ContinuarPartida } from "@/components/jogo/continuar-partida";
 import { Marca } from "@/components/jogo/marca";
 
 const ETAPAS = [
@@ -77,6 +78,10 @@ export default function PaginaInicial() {
             >
               Entrar no octógono
             </BotaoLink>
+
+            {/* Só aparece para quem já tem carreira neste navegador. Sem login,
+                é o que impede fechar a aba e perder o lutador montado. */}
+            <ContinuarPartida />
 
             <div className="mt-9 grid w-full max-w-lg grid-cols-3 border-y border-white/12 bg-black/15 backdrop-blur-[2px] md:mt-12">
               {ETAPAS.map((etapa) => (
