@@ -2,9 +2,13 @@ import type {
   BaseDeLuta,
   CategoriaDePeso,
   EstiloDeLuta,
+  GrauDeDificuldade,
+  GravidadeDaLesao,
+  IntensidadeDoTreino,
   MetodoDeEncerramento,
   NivelDaOrganizacao,
   NivelDeLegado,
+  TipoDeLesao,
 } from "./api/tipos";
 
 /**
@@ -125,4 +129,69 @@ export function corDaNota(nota: number) {
   if (nota >= 80) return "text-gelo";
   if (nota >= 70) return "text-aco-claro";
   return "text-aco";
+}
+
+/**
+ * O grau de dificuldade da oferta, do jeito que o cartaz falaria.
+ *
+ * O nome importa mais do que parece: é o que o jogador lê antes de decidir, e
+ * "brutal" precisa soar como aviso, não como estatística.
+ */
+export const DIFICULDADES: Record<GrauDeDificuldade, string> = {
+  Tranquila: "Tranquila",
+  Equilibrada: "Equilibrada",
+  Dura: "Dura",
+  Brutal: "Brutal",
+};
+
+export const DESCRICAO_DA_DIFICULDADE: Record<GrauDeDificuldade, string> = {
+  Tranquila: "Nome abaixo do seu. Vitória provável, pouco a ganhar.",
+  Equilibrada: "Gente do seu nível. A luta que mais mede alguma coisa.",
+  Dura: "Ele vem acima de você. Vencer acelera a fila.",
+  Brutal: "Muito acima. Dá para vencer, mas o corpo cobra.",
+};
+
+/** Cor de cada grau, do verde de vitória ao vermelho do fight. */
+export const COR_DA_DIFICULDADE: Record<GrauDeDificuldade, string> = {
+  Tranquila: "text-vitoria",
+  Equilibrada: "text-gelo",
+  Dura: "text-legado-claro",
+  Brutal: "text-fight-claro",
+};
+
+export const TIPOS_DE_LESAO: Record<TipoDeLesao, string> = {
+  Corte: "Corte profundo",
+  MaoFraturada: "Mão fraturada",
+  JoelhoLesionado: "Joelho lesionado",
+  CostelaTrincada: "Costela trincada",
+  Concussao: "Concussão",
+};
+
+export const GRAVIDADES_DE_LESAO: Record<GravidadeDaLesao, string> = {
+  Leve: "Leve",
+  Moderada: "Moderada",
+  Grave: "Grave",
+};
+
+export const INTENSIDADES_DE_TREINO: Record<IntensidadeDoTreino, string> = {
+  Leve: "Leve",
+  Padrao: "Padrão",
+  Pesado: "Pesado",
+};
+
+/**
+ * O que cada intensidade de camp entrega e o que ela cobra.
+ *
+ * A frase diz o trade-off inteiro porque é ele que transforma o treino em
+ * decisão: sem o custo à vista, treinar pesado seria sempre a resposta certa.
+ */
+export const DESCRICAO_DA_INTENSIDADE: Record<IntensidadeDoTreino, string> = {
+  Leve: "Só manutenção. Não evolui nada e poupa o corpo.",
+  Padrao: "O camp normal. Alguma evolução, risco normal.",
+  Pesado: "Puxado. Quase dobra a evolução e o corpo chega castigado.",
+};
+
+/** Percentual arredondado de um risco que vem de 0 a 1. */
+export function emPorcentagem(fracao: number) {
+  return `${Math.round(fracao * 100)}%`;
 }

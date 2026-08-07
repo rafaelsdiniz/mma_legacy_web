@@ -1,26 +1,44 @@
 "use client";
 
+import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { AvisoDeSubida } from "@/components/jogo/aviso-de-subida";
 import { Botao, BotaoLink } from "@/components/jogo/botao";
+import { EscolhaDoCamp } from "@/components/jogo/escolha-do-camp";
 import { Etiqueta, Painel, TituloAngular } from "@/components/jogo/painel";
+import { PainelDeLesao } from "@/components/jogo/painel-de-lesao";
 import { RankingDaDivisao } from "@/components/jogo/ranking-da-divisao";
 import { RostoDoAtleta } from "@/components/jogo/rosto-do-atleta";
 import { api, ErroDaApi } from "@/lib/api/cliente";
 import type {
+  Camp,
   EtapaDaCarreira,
   EventoDaCarreira,
+  Habilidade,
+  IntensidadeDoTreino,
+  NotaDeHabilidade,
   OfertaDeLuta,
   RoundDaLuta,
   SituacaoDaCarreira,
 } from "@/lib/api/tipos";
-import { ESTILOS, METODOS, METODOS_CURTOS, ORGANIZACOES } from "@/lib/rotulos";
+import {
+  COR_DA_DIFICULDADE,
+  DESCRICAO_DA_DIFICULDADE,
+  DIFICULDADES,
+  ESTILOS,
+  INTENSIDADES_DE_TREINO,
+  METODOS,
+  METODOS_CURTOS,
+  ORGANIZACOES,
+  emPorcentagem,
+} from "@/lib/rotulos";
 import { cn } from "@/lib/utils";
 
 type Acao =
-  | { tipo: "aceitar"; indice: number }
+  | { tipo: "aceitar"; indice: number; foco: Habilidade | null; intensidade: IntensidadeDoTreino }
   | { tipo: "recusar" }
+  | { tipo: "recuperar" }
   | { tipo: "aposentar" }
   | { tipo: "simular" };
 
@@ -36,6 +54,8 @@ const EVENTOS: Record<EventoDaCarreira, string> = {
   AnoVirado: "Mais um ano passou e seu corpo mudou.",
   FicouInativo: "Você recusou as ofertas e perdeu tempo de carreira.",
   CarreiraEncerrada: "Sua carreira chegou ao fim.",
+  Lesionou: "Você saiu machucado da luta.",
+  RecuperouDeLesao: "A lesão sarou. Você está liberado para lutar.",
 };
 
 export function TelaDeSimulacao({ partidaId }: { partidaId: string }) {
@@ -46,6 +66,12 @@ export function TelaDeSimulacao({ partidaId }: { partidaId: string }) {
     queryFn: () => api.estrearCarreira(partidaId),
     staleTime: Number.POSITIVE_INFINITY,
   });
+
+  // O camp vale para a rodada inteira: seja qual for a oferta aceita, é este
+  // treino que a antecede. Por isso a escolha mora aqui, e não dentro do card
+  // de cada luta.
+  const [foco, setFoco] = useState<Habilidade | null>(null);
+  const [intensidade, setIntensidade] = useState<IntensidadeDoTreino>("Padrao");
 
   const jogar = useMutation({
     mutationFn: (acao: Acao) => executar(partidaId, acao),
@@ -58,6 +84,7 @@ export function TelaDeSimulacao({ partidaId }: { partidaId: string }) {
   }
 
   const situacao = carreira.data;
+  const lesao = situacao.estado.lesao;
 
   const noUfc = situacao.rankingDaDivisao.length > 0;
 
@@ -88,6 +115,9 @@ export function TelaDeSimulacao({ partidaId }: { partidaId: string }) {
         />
       )}
 
+      {situacao.camp && (
+        <ResultadoDoCamp camp={situacao.camp} atributos={situacao.estado.atributos} />
+      )}
       {situacao.eventos.length > 0 && <Eventos eventos={situacao.eventos} />}
       {situacao.ultimaLuta && (
         <UltimaLuta key={situacao.ultimaLuta.luta.ordem} situacao={situacao} />
@@ -115,20 +145,45 @@ export function TelaDeSimulacao({ partidaId }: { partidaId: string }) {
         </Painel>
       ) : (
         <div className="mt-6 grid gap-6 lg:grid-cols-[1fr_300px]">
-          <Ofertas
-            ofertas={situacao.ofertas}
-            carregando={jogar.isPending}
-            aceitar={(indice) => jogar.mutate({ tipo: "aceitar", indice })}
-          />
+          {/* Machucado não escolhe luta: enquanto a lesão dura a mesa some e
+              sobra o departamento médico. É o preço de ter aceitado a luta
+              dura, e ele precisa parecer um preço. */}
+          {lesao ? (
+            <PainelDeLesao
+              lesao={lesao}
+              carregando={jogar.isPending}
+              tratar={() => jogar.mutate({ tipo: "recuperar" })}
+            />
+          ) : (
+            <Ofertas
+              ofertas={situacao.ofertas}
+              intensidade={intensidade}
+              carregando={jogar.isPending}
+              aceitar={(indice) =>
+                jogar.mutate({ tipo: "aceitar", indice, foco, intensidade })
+              }
+            />
+          )}
 
           {/* A coluna gruda ao rolar: com a tabela do lado o tempo todo, aceitar
               a luta contra o #6 deixa de ser um nome e passa a ser um degrau
               que dá para ver. */}
           <div className="flex flex-col gap-6 lg:sticky lg:top-6 lg:self-start">
+            {!lesao && (
+              <EscolhaDoCamp
+                atributos={situacao.estado.atributos}
+                foco={foco}
+                intensidade={intensidade}
+                desabilitado={jogar.isPending}
+                aoEscolherFoco={setFoco}
+                aoEscolherIntensidade={setIntensidade}
+              />
+            )}
             <PainelDeDecisao
               situacao={situacao}
               carregando={jogar.isPending}
               agir={(acao) => jogar.mutate(acao)}
+              lesionado={lesao !== null}
             />
             {noUfc && (
               <RankingDaDivisao
@@ -227,7 +282,60 @@ function Eventos({ eventos }: { eventos: EventoDaCarreira[] }) {
   );
 }
 
-function Ofertas({ ofertas, carregando, aceitar }: { ofertas: OfertaDeLuta[]; carregando: boolean; aceitar: (indice: number) => void }) {
+/**
+ * O que o camp rendeu, dito na linguagem da decisão.
+ *
+ * Diferencia "treinou e não rendeu" de "treinou e já estava no teto": são
+ * resultados iguais na nota e opostos no que pedem do jogador. O primeiro pede
+ * insistência; o segundo, outro foco.
+ */
+function ResultadoDoCamp({
+  camp,
+  atributos,
+}: {
+  camp: Camp;
+  atributos: NotaDeHabilidade[];
+}) {
+  if (!camp.foco) {
+    return null;
+  }
+
+  // O nome acentuado da habilidade já vem do servidor com os atributos; repetir
+  // a tabela aqui seria criar uma segunda versão dela.
+  const nomeDoFoco =
+    atributos.find((atributo) => atributo.habilidade === camp.foco)?.nome ?? camp.foco;
+
+  const texto = camp.evoluiu
+    ? `Camp ${INTENSIDADES_DE_TREINO[camp.intensidade].toLowerCase()}: ${nomeDoFoco} subiu de ${camp.notaAntes} para ${camp.notaDepois}.`
+    : camp.noTetoDoPotencial
+      ? `${nomeDoFoco} já chegou ao teto do que você draftou. Treinar mais aqui não rende nada.`
+      : `Camp ${INTENSIDADES_DE_TREINO[camp.intensidade].toLowerCase()}: ${nomeDoFoco} não evoluiu desta vez.`;
+
+  return (
+    <p
+      className={cn(
+        "animate-entrada mt-6 border-l-2 px-4 py-3 text-sm font-semibold",
+        camp.evoluiu
+          ? "border-vitoria bg-vitoria/10 text-vitoria"
+          : "border-grafite-borda bg-grafite-claro/60 text-aco-claro",
+      )}
+    >
+      {texto}
+    </p>
+  );
+}
+
+function Ofertas({
+  ofertas,
+  intensidade,
+  carregando,
+  aceitar,
+}: {
+  ofertas: OfertaDeLuta[];
+  intensidade: IntensidadeDoTreino;
+  carregando: boolean;
+  aceitar: (indice: number) => void;
+}) {
   return (
     <section>
       <TituloAngular>Ofertas na mesa</TituloAngular>
@@ -262,12 +370,26 @@ function Ofertas({ ofertas, carregando, aceitar }: { ofertas: OfertaDeLuta[]; ca
                   </p>
                 </div>
               </div>
+
+              {/* O confronto direto vem antes de qualquer número: saber que é o
+                  cara que te nocauteou muda a leitura de tudo que vem depois. */}
+              {oferta.ehRevanche && (
+                <p className="border-legado bg-legado/10 text-legado-claro mt-4 border-l-2 px-3 py-2 text-xs font-semibold">
+                  Revanche · {oferta.derrotasDoAdversarioParaVoce}–
+                  {oferta.vitoriasDoAdversarioSobreVoce} no confronto direto
+                </p>
+              )}
+
               <p className="text-aco-claro my-4 text-sm leading-snug">{oferta.chamada}</p>
+
               <div className="mb-4 flex items-end justify-between border-y border-grafite-borda py-3">
                 <span className="text-aco text-xs">{oferta.categoriaTexto}</span>
                 <Numero rotulo="Overall" valor={oferta.overallDoAdversario} />
               </div>
-              <div className="mt-auto">
+
+              <SeloDeDificuldade oferta={oferta} intensidade={intensidade} />
+
+              <div className="mt-auto pt-4">
                 <Botao className="w-full" disabled={carregando} onClick={() => aceitar(oferta.indice)}>
                   Aceitar luta
                 </Botao>
@@ -280,7 +402,55 @@ function Ofertas({ ofertas, carregando, aceitar }: { ofertas: OfertaDeLuta[]; ca
   );
 }
 
-function PainelDeDecisao({ situacao, carregando, agir }: { situacao: SituacaoDaCarreira; carregando: boolean; agir: (acao: Acao) => void }) {
+/**
+ * O grau da luta e o que ela pode custar ao corpo.
+ *
+ * O risco mostrado é o da intensidade de camp escolhida agora, e é exatamente o
+ * mesmo número que o servidor vai sortear depois — trocar para treino pesado faz
+ * o percentual subir aqui na hora, que é onde a escolha do camp dói.
+ */
+function SeloDeDificuldade({
+  oferta,
+  intensidade,
+}: {
+  oferta: OfertaDeLuta;
+  intensidade: IntensidadeDoTreino;
+}) {
+  const risco =
+    oferta.opcoesDeCamp.find((opcao) => opcao.intensidade === intensidade)?.riscoDeLesao ??
+    oferta.riscoDeLesao;
+
+  return (
+    <div className="border-grafite-borda border-b pb-4">
+      <div className="flex items-baseline justify-between gap-3">
+        <span className={cn("font-display text-lg font-bold uppercase", COR_DA_DIFICULDADE[oferta.dificuldade])}>
+          Luta {DIFICULDADES[oferta.dificuldade].toLowerCase()}
+        </span>
+        <span className="text-aco-claro text-xs tabular-nums">
+          <span className={risco >= 0.15 ? "text-fight-claro font-semibold" : undefined}>
+            {emPorcentagem(risco)}
+          </span>{" "}
+          de lesão
+        </span>
+      </div>
+      <p className="text-aco mt-1 text-[11px] leading-snug">
+        {DESCRICAO_DA_DIFICULDADE[oferta.dificuldade]}
+      </p>
+    </div>
+  );
+}
+
+function PainelDeDecisao({
+  situacao,
+  carregando,
+  lesionado,
+  agir,
+}: {
+  situacao: SituacaoDaCarreira;
+  carregando: boolean;
+  lesionado: boolean;
+  agir: (acao: Acao) => void;
+}) {
   const { estado } = situacao;
   return (
     <aside className="flex flex-col gap-4">
@@ -296,8 +466,14 @@ function PainelDeDecisao({ situacao, carregando, agir }: { situacao: SituacaoDaC
 
       <Painel>
         <div className="flex flex-col gap-2 p-5">
-          <Botao variante="contorno" disabled={carregando} onClick={() => agir({ tipo: "recusar" })}>Recusar ofertas</Botao>
-          <p className="text-aco mb-2 text-[11px] leading-snug">Recusar consome tempo. Três recusas seguidas causam dispensa.</p>
+          {/* Recusar não existe enquanto o corpo é quem manda: quem está
+              machucado não está fugindo de ninguém. */}
+          {!lesionado && (
+            <>
+              <Botao variante="contorno" disabled={carregando} onClick={() => agir({ tipo: "recusar" })}>Recusar ofertas</Botao>
+              <p className="text-aco mb-2 text-[11px] leading-snug">Recusar consome tempo. Três recusas seguidas causam dispensa.</p>
+            </>
+          )}
           <Botao variante="contorno" disabled={carregando} onClick={() => confirmar("Simular toda a carreira restante?", () => agir({ tipo: "simular" }))}>Simular o resto</Botao>
           <Botao variante="fantasma" disabled={carregando} onClick={() => confirmar("Encerrar sua carreira agora?", () => agir({ tipo: "aposentar" }))}>Aposentar agora</Botao>
         </div>
@@ -356,7 +532,10 @@ function Round({ round }: { round: RoundDaLuta }) {
 
 function executar(partidaId: string, acao: Acao) {
   switch (acao.tipo) {
-    case "aceitar": return api.aceitarOferta(partidaId, acao.indice);
+    case "aceitar":
+      return api.aceitarOferta(partidaId, acao.indice, acao.foco, acao.intensidade);
+    case "recuperar":
+      return api.recuperar(partidaId);
     case "recusar": return api.recusarOfertas(partidaId);
     case "aposentar": return api.aposentar(partidaId);
     case "simular": return api.simularOResto(partidaId);
