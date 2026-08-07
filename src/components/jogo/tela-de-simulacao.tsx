@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { AvisoDeSubida } from "@/components/jogo/aviso-de-subida";
@@ -22,6 +22,7 @@ import type {
   OfertaDeLuta,
   SituacaoDaCarreira,
 } from "@/lib/api/tipos";
+import { salvarPartida } from "@/lib/partidas-salvas";
 import {
   COR_DA_DIFICULDADE,
   DESCRICAO_DA_DIFICULDADE,
@@ -75,6 +76,23 @@ export function TelaDeSimulacao({ partidaId }: { partidaId: string }) {
     mutationFn: (acao: Acao) => executar(partidaId, acao),
     onSuccess: (situacao) => consultas.setQueryData(chave, situacao),
   });
+
+  // Mantém o atalho da home apontando para esta partida. É escrita em
+  // armazenamento de fora do React, que é exatamente o que um efeito serve para
+  // fazer — e por isso não há estado nenhum sendo sincronizado aqui.
+  const situacaoCarregada = carreira.data;
+
+  useEffect(() => {
+    if (!situacaoCarregada) {
+      return;
+    }
+
+    salvarPartida({
+      id: partidaId,
+      nomeDeCartaz: situacaoCarregada.nomeDeCartaz,
+      status: situacaoCarregada.encerrada ? "CarreiraSimulada" : "CarreiraEmAndamento",
+    });
+  }, [partidaId, situacaoCarregada]);
 
   if (carreira.isPending) return <Centro>Preparando sua estreia...</Centro>;
   if (carreira.isError) {
