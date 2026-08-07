@@ -88,7 +88,8 @@ export type MotivoDoEncerramento =
   | "SemResultados"
   | "SemContrato"
   | "LimiteDeLutas"
-  | "EscolhaDoLutador";
+  | "EscolhaDoLutador"
+  | "LesaoIncapacitante";
 
 export type EventoDaCarreira =
   | "Promovido"
@@ -101,7 +102,9 @@ export type EventoDaCarreira =
   | "MudouDeCategoria"
   | "AnoVirado"
   | "FicouInativo"
-  | "CarreiraEncerrada";
+  | "CarreiraEncerrada"
+  | "Lesionou"
+  | "RecuperouDeLesao";
 
 export type VencedorDoRound = "Lutador" | "Adversario" | "Empate";
 
@@ -123,6 +126,63 @@ export type NivelDaOrganizacao =
   | "CircuitoRegional"
   | "OrganizacaoNacional"
   | "GrandeOrganizacao";
+
+/**
+ * Quão dura uma oferta é para o lutador que a recebe.
+ *
+ * Não é atributo do adversário: é a relação entre ele e o jogador de hoje. O
+ * mesmo nome que era `Brutal` para o estreante é `Tranquila` quatro anos
+ * depois, e por isso o grau vem calculado a cada leitura da mesa.
+ */
+export type GrauDeDificuldade = "Tranquila" | "Equilibrada" | "Dura" | "Brutal";
+
+export type TipoDeLesao =
+  | "Corte"
+  | "MaoFraturada"
+  | "JoelhoLesionado"
+  | "CostelaTrincada"
+  | "Concussao";
+
+export type GravidadeDaLesao = "Leve" | "Moderada" | "Grave";
+
+/** Com que peso o lutador treinou para a luta que aceitou. */
+export type IntensidadeDoTreino = "Leve" | "Padrao" | "Pesado";
+
+/** Na ordem em que a tela apresenta as opções de camp. */
+export const INTENSIDADES: readonly IntensidadeDoTreino[] = [
+  "Leve",
+  "Padrao",
+  "Pesado",
+] as const;
+
+export interface Lesao {
+  tipo: TipoDeLesao;
+  gravidade: GravidadeDaLesao;
+  /** Nula quando a lesão não deixa sequela, como um corte. */
+  habilidadeAfetada: Habilidade | null;
+  pontosPerdidos: number;
+  afastamento: number;
+  compromissosRestantes: number;
+  idadeQuandoOcorreu: number;
+}
+
+/** Uma intensidade de camp e o risco de lesão que ela traz para esta luta. */
+export interface OpcaoDeCamp {
+  intensidade: IntensidadeDoTreino;
+  riscoDeLesao: number;
+}
+
+/** O que o treino que antecedeu a luta produziu. */
+export interface Camp {
+  /** Nulo quando o jogador não escolheu foco nenhum. */
+  foco: Habilidade | null;
+  intensidade: IntensidadeDoTreino;
+  evoluiu: boolean;
+  /** Treinou, mas a habilidade já estava no teto do potencial do draft. */
+  noTetoDoPotencial: boolean;
+  notaAntes: number;
+  notaDepois: number;
+}
 
 export interface NotaDeHabilidade {
   habilidade: Habilidade;
@@ -286,6 +346,10 @@ export interface EstadoDaCarreira {
   compromissosNaTemporada: number;
   compromissosPorTemporada: number;
   vezesDispensado: number;
+  /** Quantas lesões o corpo já levou nesta carreira. */
+  lesoesSofridas: number;
+  /** A lesão em tratamento agora, ou nula se o lutador está inteiro. */
+  lesao: Lesao | null;
   /** 0 é campeão, 1 a 15 ranqueado, nulo para quem ainda não entrou. */
   posicaoNoRanking: number | null;
 }
@@ -315,6 +379,16 @@ export interface OfertaDeLuta {
   defesaDeCinturao: boolean;
   roundsProgramados: number;
   chamada: string;
+  /** Quão dura esta luta é para o lutador de hoje. */
+  dificuldade: GrauDeDificuldade;
+  /** Já se enfrentaram antes. */
+  ehRevanche: boolean;
+  vitoriasDoAdversarioSobreVoce: number;
+  derrotasDoAdversarioParaVoce: number;
+  /** Chance de sair machucado, de 0 a 1, num camp de intensidade padrão. */
+  riscoDeLesao: number;
+  /** O risco em cada intensidade de camp, para a tela mostrar o preço da escolha. */
+  opcoesDeCamp: OpcaoDeCamp[];
   /** Preenchido só quando o adversário é atleta real do acervo. */
   slugDoAdversario: string | null;
   /** Posição dele no ranking, que a vitória converte na sua. */
@@ -350,6 +424,8 @@ export interface SituacaoDaCarreira {
   carreira: Carreira;
   ultimaLuta: DesfechoDaUltimaLuta | null;
   eventos: EventoDaCarreira[];
+  /** O que o camp desta jogada produziu. Nulo quando não houve camp. */
+  camp: Camp | null;
   /** Vazio antes de o lutador chegar ao UFC, onde não há ranking a mostrar. */
   rankingDaDivisao: LinhaDoRanking[];
   /** Onde você estava antes desta jogada, para animar o movimento. */
