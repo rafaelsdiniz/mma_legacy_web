@@ -391,8 +391,7 @@ function Ofertas({
                   cara que te nocauteou muda a leitura de tudo que vem depois. */}
               {oferta.ehRevanche && (
                 <p className="border-legado bg-legado/10 text-legado-claro mt-4 border-l-2 px-3 py-2 text-xs font-semibold">
-                  Revanche · {oferta.derrotasDoAdversarioParaVoce}–
-                  {oferta.vitoriasDoAdversarioSobreVoce} no confronto direto
+                  {`Revanche · ${oferta.derrotasDoAdversarioParaVoce}–${oferta.vitoriasDoAdversarioSobreVoce} no confronto direto`}
                 </p>
               )}
 
